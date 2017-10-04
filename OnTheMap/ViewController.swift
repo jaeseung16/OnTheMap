@@ -25,8 +25,30 @@ class LoginViewController: UIViewController {
 
 
     @IBAction func loginButtonPressed(_ sender: UIButton) {
-        // Alert View Controller when login failed
         
+        guard let email = emailTextField.text, email != "" else {
+            loginFailed("Please enter your email address.")
+            return
+        }
+        
+        guard let password = passwordTextField.text, password != "" else {
+            loginFailed("Please enter your password.")
+            return
+        }
+        
+        loginFailed("Incorrect email or password.")
+        
+    }
+    
+    func loginFailed(_ message: String) {
+        // Alert View Controller when login failed
+        // Should differentiate between a failure to connect and incorrect credentials
+        
+        let alert = UIAlertController(title: "Login Failed", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+            NSLog("Login Failed")
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
     
 }
