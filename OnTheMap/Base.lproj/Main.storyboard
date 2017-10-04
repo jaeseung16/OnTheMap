@@ -35,6 +35,9 @@
                                 <rect key="frame" x="13" y="396" width="346" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="LOG IN"/>
+                                <connections>
+                                    <action selector="loginButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nPf-jH-v5M"/>
+                                </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Logo-U" translatesAutoresizingMaskIntoConstraints="NO" id="Jkw-vl-899">
                                 <rect key="frame" x="156" y="98" width="62" height="62"/>
@@ -46,7 +49,6 @@
                     </view>
                     <connections>
                         <outlet property="emailTextField" destination="EZB-ib-S9T" id="PfU-6c-xfd"/>
-                        <outlet property="loginButton" destination="tXY-if-h6J" id="Y1R-6h-hdv"/>
                         <outlet property="passwordTextField" destination="dTE-HX-wH9" id="rBV-r4-cum"/>
                     </connections>
                 </viewController>
