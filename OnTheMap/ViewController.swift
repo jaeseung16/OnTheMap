@@ -37,8 +37,56 @@ class LoginViewController: UIViewController {
             loginFailed("Please enter your password.")
             return
         }
+ 
+        // email = "jaeseung@gmail.com"
+        // password = "6Uq-yNP-VUp-dUQ"
         
-        loginFailed("Incorrect email or password.")
+        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = "{\"udacity\": {\"username\": \"\(email)\", \"password\": \"\(password)\"}}".data(using: String.Encoding.utf8)
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
+            guard (error == nil) else {
+                print("There is an error: \(String(describing: error))")
+                return
+            }
+            
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                print("Your request returned a status code other than 2xx!")
+                return
+            }
+            
+            guard let data = data else {
+                print("No data was returned by the request!")
+                return
+            }
+            
+            let range = Range(5..<data.count)
+            let newData = data.subdata(in: range)
+            print(NSString(data: newData, encoding: String.Encoding.utf8.rawValue)!)
+            
+            let parsedResult: [String: AnyObject]!
+                
+            do {
+                parsedResult = try JSONSerialization.jsonObject(with: newData, options: .allowFragments) as! [String: AnyObject]
+            } catch {
+                print("Could not parse the data as JSON: '\(data)'")
+                return
+            }
+            
+            if let _ = parsedResult["status"] as? Int {
+                // self.loginFailed("Incorrect email or password")
+                return
+            }
+            
+            // self.loginFailed("Incorrect email or password")
+        }
+        
+        task.resume()
+        
         
     }
     
