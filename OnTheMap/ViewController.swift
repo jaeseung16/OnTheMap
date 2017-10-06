@@ -82,6 +82,13 @@ class LoginViewController: UIViewController {
                 return
             }
             
+            guard let account = parsedResult["account"] as? [String: AnyObject], let key = account["key"] as? String else {
+                print("Could not get the account key.")
+                return
+            }
+            
+            print(key)
+            
             // self.loginFailed("Incorrect email or password")
         }
         
