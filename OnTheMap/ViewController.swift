@@ -15,6 +15,7 @@ class LoginViewController: UIViewController {
     
     let applicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
     let apiKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
+    var studentLocations = [StudentLocation]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,7 +124,29 @@ class LoginViewController: UIViewController {
                         return
                     }
                     
-                    print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+                    // print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+                    
+                    let parsedResult: [String: AnyObject]!
+                    
+                    do {
+                        parsedResult = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String: AnyObject]
+                    } catch {
+                        print("Could not parse the data as JSON: '\(String(describing: data))'")
+                        return
+                    }
+                    
+                    guard let results = parsedResult["results"] as? [[String: AnyObject]] else {
+                        print("Could not get the results key.")
+                        return
+                    }
+                    
+                    for result in results {
+                        let studentLocation = StudentLocation(dictionary: result)
+                        self.studentLocations.append(studentLocation)
+                    }
+                    
+                    print("\(self.studentLocations.count)")
+                    
                 })
                 
                 task.resume()
