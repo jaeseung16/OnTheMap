@@ -13,6 +13,9 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
+    let applicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
+    let apiKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -69,7 +72,7 @@ class LoginViewController: UIViewController {
             
             let range = Range(5..<data.count)
             let newData = data.subdata(in: range)
-            print(NSString(data: newData, encoding: String.Encoding.utf8.rawValue)!)
+            // print(NSString(data: newData, encoding: String.Encoding.utf8.rawValue)!)
             
             let parsedResult: [String: AnyObject]!
                 
@@ -94,7 +97,7 @@ class LoginViewController: UIViewController {
             
             print(key)
             
-            self.loginFailed("Login Succeeded.")
+            // self.loginFailed("Login Succeeded.")
             
             // Geting pulbic user data
             
@@ -107,10 +110,32 @@ class LoginViewController: UIViewController {
                 
                 let range = Range(5..<data!.count)
                 let newData = data?.subdata(in: range)
-                print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
+                // print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
+                
+                // Getting student locations
+                
+                let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
+                request.addValue(self.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
+                request.addValue(self.apiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+                let session = URLSession.shared
+                let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) in
+                    guard (error == nil) else {
+                        return
+                    }
+                    
+                    print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+                })
+                
+                task.resume()
+                
+                DispatchQueue.main.async {
+                    self.performSegue(withIdentifier: "LogedIn", sender: self)
+                }
+                
             })
             
             task.resume()
+            
         }
         
         task.resume()
