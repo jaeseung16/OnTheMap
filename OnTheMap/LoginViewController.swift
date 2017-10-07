@@ -28,6 +28,12 @@ class LoginViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationController = segue.destination as! OnTheMapTabBarController
+        
+        destinationController.studentLocations = studentLocations
+    }
 
 
     @IBAction func loginButtonPressed(_ sender: UIButton) {
@@ -110,7 +116,7 @@ class LoginViewController: UIViewController {
                 }
                 
                 let range = Range(5..<data!.count)
-                let newData = data?.subdata(in: range)
+                // let newData = data?.subdata(in: range)
                 // print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
                 
                 // Getting student locations
@@ -147,13 +153,13 @@ class LoginViewController: UIViewController {
                     
                     print("\(self.studentLocations.count)")
                     
+                    DispatchQueue.main.async {
+                        self.performSegue(withIdentifier: "LogedIn", sender: self)
+                    }
+                    
                 })
                 
                 task.resume()
-                
-                DispatchQueue.main.async {
-                    self.performSegue(withIdentifier: "LogedIn", sender: self)
-                }
                 
             })
             
