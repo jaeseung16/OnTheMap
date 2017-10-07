@@ -14,6 +14,7 @@
 		0BA9DD231F858F5F00247CFF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BA9DD221F858F5F00247CFF /* Assets.xcassets */; };
 		0BA9DD261F858F5F00247CFF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BA9DD241F858F5F00247CFF /* LaunchScreen.storyboard */; };
 		0BFD06251F89772C00460564 /* OnTheMapTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFD06241F89772C00460564 /* OnTheMapTabBarController.swift */; };
+		0BFD06271F8979F400460564 /* OTMMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFD06261F8979F400460564 /* OTMMapViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		0BA9DD251F858F5F00247CFF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0BA9DD271F858F5F00247CFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0BFD06241F89772C00460564 /* OnTheMapTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheMapTabBarController.swift; sourceTree = "<group>"; };
+		0BFD06261F8979F400460564 /* OTMMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTMMapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 				0BA9DD1D1F858F5F00247CFF /* LoginViewController.swift */,
 				0B9A9B521F885D1000605C0B /* StudentLocation.swift */,
 				0BA9DD1F1F858F5F00247CFF /* Main.storyboard */,
+				0BFD06261F8979F400460564 /* OTMMapViewController.swift */,
 				0BFD06241F89772C00460564 /* OnTheMapTabBarController.swift */,
 				0BA9DD221F858F5F00247CFF /* Assets.xcassets */,
 				0BA9DD241F858F5F00247CFF /* LaunchScreen.storyboard */,
@@ -143,6 +146,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B9A9B531F885D1000605C0B /* StudentLocation.swift in Sources */,
+				0BFD06271F8979F400460564 /* OTMMapViewController.swift in Sources */,
 				0BFD06251F89772C00460564 /* OnTheMapTabBarController.swift in Sources */,
 				0BA9DD1E1F858F5F00247CFF /* LoginViewController.swift in Sources */,
 				0BA9DD1C1F858F5F00247CFF /* AppDelegate.swift in Sources */,
