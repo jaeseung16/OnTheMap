@@ -18,21 +18,20 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
 
         // Do any additional setup after loading the view.
         
-        let locations = (self.navigationController?.tabBarController as! OnTheMapTabBarController).studentLocations
+        let locations = (self.navigationController?.tabBarController as! OnTheMapTabBarController).studentsInformation
         
         var annotations = [MKPointAnnotation]()
         
         for location in locations {
             
-            guard let latitude = location.latitude, let longitude = location.longitude else {
-                continue
-            }
+            let latitude = location.latitude
+            let longitude = location.longitude
             
             let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude))
             
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinate
-            annotation.title = "\(location.firstName!) \(location.lastName!)"
+            annotation.title = "\(location.firstName) \(location.lastName)"
             annotation.subtitle = location.mediaURL
             
             annotations.append(annotation)

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0B682C961F8A537900A4779A /* OTHTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B682C951F8A537900A4779A /* OTHTableViewController.swift */; };
-		0B9A9B531F885D1000605C0B /* StudentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9A9B521F885D1000605C0B /* StudentLocation.swift */; };
+		0B9A9B531F885D1000605C0B /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9A9B521F885D1000605C0B /* StudentInformation.swift */; };
 		0BA9DD1C1F858F5F00247CFF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9DD1B1F858F5F00247CFF /* AppDelegate.swift */; };
 		0BA9DD1E1F858F5F00247CFF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9DD1D1F858F5F00247CFF /* LoginViewController.swift */; };
 		0BA9DD211F858F5F00247CFF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BA9DD1F1F858F5F00247CFF /* Main.storyboard */; };
@@ -20,7 +20,7 @@
 
 /* Begin PBXFileReference section */
 		0B682C951F8A537900A4779A /* OTHTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTHTableViewController.swift; sourceTree = "<group>"; };
-		0B9A9B521F885D1000605C0B /* StudentLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentLocation.swift; sourceTree = "<group>"; };
+		0B9A9B521F885D1000605C0B /* StudentInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentInformation.swift; sourceTree = "<group>"; };
 		0BA9DD181F858F5F00247CFF /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA9DD1B1F858F5F00247CFF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0BA9DD1D1F858F5F00247CFF /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -64,7 +64,7 @@
 			children = (
 				0BA9DD1B1F858F5F00247CFF /* AppDelegate.swift */,
 				0BA9DD1D1F858F5F00247CFF /* LoginViewController.swift */,
-				0B9A9B521F885D1000605C0B /* StudentLocation.swift */,
+				0B9A9B521F885D1000605C0B /* StudentInformation.swift */,
 				0BA9DD1F1F858F5F00247CFF /* Main.storyboard */,
 				0BFD06261F8979F400460564 /* OTMMapViewController.swift */,
 				0B682C951F8A537900A4779A /* OTHTableViewController.swift */,
@@ -148,7 +148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B9A9B531F885D1000605C0B /* StudentLocation.swift in Sources */,
+				0B9A9B531F885D1000605C0B /* StudentInformation.swift in Sources */,
 				0BFD06271F8979F400460564 /* OTMMapViewController.swift in Sources */,
 				0BFD06251F89772C00460564 /* OnTheMapTabBarController.swift in Sources */,
 				0B682C961F8A537900A4779A /* OTHTableViewController.swift in Sources */,

@@ -10,14 +10,14 @@ import UIKit
 
 class OnTheMapTabBarController: UITabBarController {
     
-    var studentLocations = [StudentLocation]()
+    var studentsInformation = [StudentInformation]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         
-        print("Received: \(studentLocations.count)")
+        print("Received: \(studentsInformation.count)")
     }
 
     override func didReceiveMemoryWarning() {

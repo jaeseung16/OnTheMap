@@ -15,7 +15,7 @@ class LoginViewController: UIViewController {
     
     let applicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
     let apiKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
-    var studentLocations = [StudentLocation]()
+    var studentsInformation = [StudentInformation]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +32,7 @@ class LoginViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destinationController = segue.destination as! OnTheMapTabBarController
         
-        destinationController.studentLocations = studentLocations
+        destinationController.studentsInformation = studentsInformation
     }
 
 
@@ -147,11 +147,11 @@ class LoginViewController: UIViewController {
                     }
                     
                     for result in results {
-                        let studentLocation = StudentLocation(dictionary: result)
-                        self.studentLocations.append(studentLocation)
+                        let studentLocation = StudentInformation(dictionary: result)
+                        self.studentsInformation.append(studentLocation)
                     }
                     
-                    print("\(self.studentLocations.count)")
+                    print("\(self.studentsInformation.count)")
                     
                     DispatchQueue.main.async {
                         self.performSegue(withIdentifier: "LogedIn", sender: self)

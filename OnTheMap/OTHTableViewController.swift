@@ -10,7 +10,7 @@ import UIKit
 
 class OTHTableViewController: UITableViewController {
     
-    var locations = [StudentLocation]()
+    var locations = [StudentInformation]()
     let reuseIdentifier = "OTHTableViewCell"
 
     override func viewDidLoad() {
@@ -22,7 +22,7 @@ class OTHTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
-        let locations = (self.navigationController?.tabBarController as! OnTheMapTabBarController).studentLocations
+        let locations = (self.navigationController?.tabBarController as! OnTheMapTabBarController).studentsInformation
         
         for location in locations {
             self.locations.append(location)
@@ -54,10 +54,21 @@ class OTHTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as UITableViewCell
 
         // Configure the cell...
-        cell.textLabel!.text = "\(location.firstName!) \(location.lastName!)"
+        cell.textLabel!.text = "\(location.firstName) \(location.lastName)"
         cell.detailTextLabel!.text = "\(String(describing: location.mediaURL))"
 
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let location = locations[indexPath.row]
+        
+        let app = UIApplication.shared
+        
+        if let url = URL(string:location.mediaURL) {
+            app.open(url)
+        }
+        
     }
     
 
