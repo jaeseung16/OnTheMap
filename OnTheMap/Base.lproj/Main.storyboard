@@ -17,34 +17,42 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Email" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EZB-ib-S9T">
-                                <rect key="frame" x="13" y="240" width="346" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
-                            </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Password" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dTE-HX-wH9">
-                                <rect key="frame" x="13" y="318" width="346" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Password" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dTE-HX-wH9">
+                                <rect key="frame" x="13" y="328.5" width="346" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tXY-if-h6J">
-                                <rect key="frame" x="13" y="396" width="346" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tXY-if-h6J">
+                                <rect key="frame" x="13" y="366" width="346" height="30"/>
                                 <state key="normal" title="LOG IN"/>
                                 <connections>
                                     <action selector="loginButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nPf-jH-v5M"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Logo-U" translatesAutoresizingMaskIntoConstraints="NO" id="Jkw-vl-899">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="Logo-U" translatesAutoresizingMaskIntoConstraints="NO" id="Jkw-vl-899">
                                 <rect key="frame" x="156" y="98" width="62" height="62"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Email" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EZB-ib-S9T">
+                                <rect key="frame" x="13" y="290" width="346" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="EZB-ib-S9T" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="13" id="0zR-F1-FJe"/>
+                            <constraint firstItem="Jkw-vl-899" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="1ma-c4-fZo"/>
+                            <constraint firstItem="tXY-if-h6J" firstAttribute="leading" secondItem="EZB-ib-S9T" secondAttribute="leading" id="BXt-zR-2AV"/>
+                            <constraint firstItem="dTE-HX-wH9" firstAttribute="leading" secondItem="EZB-ib-S9T" secondAttribute="leading" id="FML-tN-fQU"/>
+                            <constraint firstItem="dTE-HX-wH9" firstAttribute="top" secondItem="EZB-ib-S9T" secondAttribute="bottom" constant="8.5" id="R8R-0d-Q6t"/>
+                            <constraint firstItem="dTE-HX-wH9" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="fcT-hR-Wwm"/>
+                            <constraint firstItem="tXY-if-h6J" firstAttribute="trailing" secondItem="EZB-ib-S9T" secondAttribute="trailing" id="i5I-62-MGo"/>
+                            <constraint firstItem="tXY-if-h6J" firstAttribute="top" secondItem="dTE-HX-wH9" secondAttribute="bottom" constant="7.5" id="jCe-KJ-zQJ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="EZB-ib-S9T" secondAttribute="trailing" constant="16" id="yS2-kR-fnc"/>
+                            <constraint firstItem="dTE-HX-wH9" firstAttribute="trailing" secondItem="EZB-ib-S9T" secondAttribute="trailing" id="zpE-dB-HrL"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
@@ -60,24 +68,44 @@
         <!--Root View Controller-->
         <scene sceneID="VPB-KR-aFp">
             <objects>
-                <tableViewController id="7JK-tg-MbD" sceneMemberID="viewController">
+                <tableViewController id="7JK-tg-MbD" customClass="OTHTableViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="G8R-iY-1Fk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Tgf-Ea-8Q5">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OTHTableViewCell" textLabel="muM-YT-bAM" detailTextLabel="LuP-iF-UiC" imageView="ZDx-bS-3xF" style="IBUITableViewCellStyleSubtitle" id="Tgf-Ea-8Q5">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Tgf-Ea-8Q5" id="4iz-0I-OiU">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="muM-YT-bAM">
+                                            <rect key="frame" x="55" y="5" width="33.5" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="LuP-iF-UiC">
+                                            <rect key="frame" x="55" y="25.5" width="44" height="14.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="Icon_Pin" id="ZDx-bS-3xF">
+                                            <rect key="frame" x="16" y="9" width="24" height="24"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </imageView>
+                                    </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="7JK-tg-MbD" id="MtJ-Oj-b5L"/>
-                            <outlet property="delegate" destination="7JK-tg-MbD" id="aSR-Um-tld"/>
+                            <outlet property="dataSource" destination="7JK-tg-MbD" id="Jw4-C7-JKd"/>
+                            <outlet property="delegate" destination="7JK-tg-MbD" id="cce-K3-lv6"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="1Le-vU-l8t"/>
@@ -179,6 +207,7 @@
         <image name="Icon_Listview_Selected" width="75" height="50"/>
         <image name="Icon_Mapview_Deselected" width="75" height="50"/>
         <image name="Icon_Mapview_Selected" width="75" height="50"/>
+        <image name="Icon_Pin" width="24" height="24"/>
         <image name="Logo-U" width="62" height="62"/>
     </resources>
 </document>
