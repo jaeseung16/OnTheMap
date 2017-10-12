@@ -71,7 +71,26 @@ class OTHTableViewController: UITableViewController {
         
     }
     
-
+    @IBAction func logout(_ sender: UIBarButtonItem) {
+        let _ = OTHClient.sharedInstance().logOut { (success, sessionID, errorString) in
+            
+            if success {
+                OTHClient.sharedInstance().reset()
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(title: "Logout Failed", message: errorString, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+                        NSLog("Logout Failed")
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+        }
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

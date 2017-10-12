@@ -131,14 +131,18 @@
                     </tableView>
                     <tabBarItem key="tabBarItem" title="List" image="Icon_Listview_Deselected" selectedImage="Icon_Listview_Selected" id="E8G-0e-vfO"/>
                     <navigationItem key="navigationItem" title="On the Map" id="W0e-fn-w5Q">
-                        <barButtonItem key="leftBarButtonItem" title="Logout" id="bl8-iP-8tS"/>
+                        <barButtonItem key="leftBarButtonItem" title="Logout" id="bl8-iP-8tS">
+                            <connections>
+                                <action selector="logout:" destination="7JK-tg-MbD" id="FfQ-U8-T5f"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem title="Item" image="Icon_AddPin" id="JcR-Zf-y45">
+                            <barButtonItem image="Icon_AddPin" id="JcR-Zf-y45">
                                 <connections>
                                     <segue destination="0Y0-SD-4V5" kind="presentation" id="y9T-Mq-0Tu"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Item" image="Icon_Refresh" id="atA-fk-337"/>
+                            <barButtonItem image="Icon_Refresh" id="atA-fk-337"/>
                         </rightBarButtonItems>
                     </navigationItem>
                 </tableViewController>
@@ -213,12 +217,12 @@
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem title="Item" image="Icon_AddPin" id="c6T-ow-Xnq">
+                            <barButtonItem image="Icon_AddPin" id="c6T-ow-Xnq">
                                 <connections>
                                     <segue destination="0Y0-SD-4V5" kind="presentation" id="ky2-fO-A0u"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Item" image="Icon_Refresh" id="sSY-4P-5t8"/>
+                            <barButtonItem image="Icon_Refresh" id="sSY-4P-5t8"/>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>

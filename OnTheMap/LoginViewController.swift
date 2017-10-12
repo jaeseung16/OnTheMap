@@ -13,15 +13,14 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
-    let applicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
-    let apiKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
     var studentsInformation = [StudentInformation]()
+    var onTheMapClient: OTHClient!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        // passwordTextField.isSecureTextEntry = true
+        onTheMapClient = OTHClient.sharedInstance()
     }
 
     override func didReceiveMemoryWarning() {
@@ -47,6 +46,9 @@ class LoginViewController: UIViewController {
             loginFailed("Please enter your password.")
             return
         }
+        
+        emailTextField.isEnabled = false
+        passwordTextField.isEnabled = false
  
         // email = "jaeseung@gmail.com"
         // password = "6Uq-yNP-VUp-dUQ"
@@ -61,11 +63,16 @@ class LoginViewController: UIViewController {
         let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
             guard (error == nil) else {
                 print("There is an error: \(String(describing: error))")
-                self.loginFailed("There is a problem. Try again.")
+                self.loginFailed("Failure to connect. Check the network connection.")
                 return
             }
             
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                
+                if let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode == 403 {
+                    self.loginFailed("Account not found or invalid credentials.")
+                }
+                
                 print("Your request returned a status code other than 2xx!")
                 self.loginFailed("There is a problem. Try again.")
                 return
@@ -102,7 +109,16 @@ class LoginViewController: UIViewController {
                 return
             }
             
-            print(key)
+            OTHClient.sharedInstance().userID = key
+            
+            guard let sessionID = parsedResult["session"] as? [String: AnyObject], let id = sessionID["id"] as? String else {
+                print("Could not get the session ID.")
+                self.loginFailed("There is a problem. Try again.")
+                return
+            }
+            
+            OTHClient.sharedInstance().sessionID = id
+            print(id)
             
             // self.loginFailed("Login Succeeded.")
             
@@ -122,8 +138,8 @@ class LoginViewController: UIViewController {
                 // Getting student locations
                 
                 let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
-                request.addValue(self.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
-                request.addValue(self.apiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+                request.addValue(OTHClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
+                request.addValue(OTHClient.restAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
                 let session = URLSession.shared
                 let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) in
                     guard (error == nil) else {
@@ -181,6 +197,9 @@ class LoginViewController: UIViewController {
                 NSLog("Login Failed")
             }))
             self.present(alert, animated: true, completion: nil)
+            
+            self.emailTextField.isEnabled = true
+            self.passwordTextField.isEnabled = true
         }
     }
     

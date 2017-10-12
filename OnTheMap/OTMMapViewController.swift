@@ -49,32 +49,23 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
         
-        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
-        request.httpMethod = "DELETE"
-        var xsrfCookie: HTTPCookie? = nil
-        let sharedCookieStorage = HTTPCookieStorage.shared
-        for cookie in sharedCookieStorage.cookies! {
-            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
-        }
-        if let xsrfCookie = xsrfCookie {
-            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
-        }
-        let session = URLSession.shared
-        let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
-            if error != nil {
-                return
-            }
+        let _ = OTHClient.sharedInstance().logOut { (success, sessionID, errorString) in
             
-            let range = Range(5..<data!.count)
-            let newData = data?.subdata(in: range)
-            print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
-            
-            DispatchQueue.main.async {
-                self.dismiss(animated: true)
+            if success {
+                OTHClinet.sharedInstance().reset()
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(title: "Logout Failed", message: errorString, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+                        NSLog("Logout Failed")
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                }
             }
         }
-        
-        task.resume()
     }
     
     /*

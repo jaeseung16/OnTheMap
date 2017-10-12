@@ -9,7 +9,9 @@
 /* Begin PBXBuildFile section */
 		0B682C961F8A537900A4779A /* OTHTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B682C951F8A537900A4779A /* OTHTableViewController.swift */; };
 		0B6A57A81F8C10900042EDCD /* InformationPostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6A57A71F8C10900042EDCD /* InformationPostingViewController.swift */; };
+		0B6E8A471F8D5D390060E1E4 /* OTHClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6E8A461F8D5D390060E1E4 /* OTHClient.swift */; };
 		0B9A9B531F885D1000605C0B /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9A9B521F885D1000605C0B /* StudentInformation.swift */; };
+		0BA9A0551F8EDA5D000432AB /* OTHConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9A0541F8EDA5D000432AB /* OTHConstants.swift */; };
 		0BA9DD1C1F858F5F00247CFF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9DD1B1F858F5F00247CFF /* AppDelegate.swift */; };
 		0BA9DD1E1F858F5F00247CFF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9DD1D1F858F5F00247CFF /* LoginViewController.swift */; };
 		0BA9DD211F858F5F00247CFF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BA9DD1F1F858F5F00247CFF /* Main.storyboard */; };
@@ -22,7 +24,9 @@
 /* Begin PBXFileReference section */
 		0B682C951F8A537900A4779A /* OTHTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTHTableViewController.swift; sourceTree = "<group>"; };
 		0B6A57A71F8C10900042EDCD /* InformationPostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationPostingViewController.swift; sourceTree = "<group>"; };
+		0B6E8A461F8D5D390060E1E4 /* OTHClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTHClient.swift; sourceTree = "<group>"; };
 		0B9A9B521F885D1000605C0B /* StudentInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentInformation.swift; sourceTree = "<group>"; };
+		0BA9A0541F8EDA5D000432AB /* OTHConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTHConstants.swift; sourceTree = "<group>"; };
 		0BA9DD181F858F5F00247CFF /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA9DD1B1F858F5F00247CFF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0BA9DD1D1F858F5F00247CFF /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -69,6 +73,8 @@
 				0B9A9B521F885D1000605C0B /* StudentInformation.swift */,
 				0BA9DD1F1F858F5F00247CFF /* Main.storyboard */,
 				0B6A57A71F8C10900042EDCD /* InformationPostingViewController.swift */,
+				0B6E8A461F8D5D390060E1E4 /* OTHClient.swift */,
+				0BA9A0541F8EDA5D000432AB /* OTHConstants.swift */,
 				0BFD06261F8979F400460564 /* OTMMapViewController.swift */,
 				0B682C951F8A537900A4779A /* OTHTableViewController.swift */,
 				0BFD06241F89772C00460564 /* OnTheMapTabBarController.swift */,
@@ -155,9 +161,11 @@
 				0BFD06271F8979F400460564 /* OTMMapViewController.swift in Sources */,
 				0BFD06251F89772C00460564 /* OnTheMapTabBarController.swift in Sources */,
 				0B682C961F8A537900A4779A /* OTHTableViewController.swift in Sources */,
+				0B6E8A471F8D5D390060E1E4 /* OTHClient.swift in Sources */,
 				0B6A57A81F8C10900042EDCD /* InformationPostingViewController.swift in Sources */,
 				0BA9DD1E1F858F5F00247CFF /* LoginViewController.swift in Sources */,
 				0BA9DD1C1F858F5F00247CFF /* AppDelegate.swift in Sources */,
+				0BA9A0551F8EDA5D000432AB /* OTHConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
