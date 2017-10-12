@@ -52,7 +52,7 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
         let _ = OTHClient.sharedInstance().logOut { (success, sessionID, errorString) in
             
             if success {
-                OTHClinet.sharedInstance().reset()
+                OTHClient.sharedInstance().reset()
                 DispatchQueue.main.async {
                     self.dismiss(animated: true)
                 }

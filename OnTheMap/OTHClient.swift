@@ -44,42 +44,55 @@ class OTHClient: NSObject {
         }
     }*/
     
+    // MARK: getPublicUserData
+    /*
+    func getPublicUserData(completionHandlerForUserData: @escaping (_ success: Bool, _ results: [[String: AnyObject]]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
+        
+        let task
+        return
+    }*/
+    
+    // MARK: getStudentLocations
+    
     func getStudentLocations(completionHandlerForStudentLocation: @escaping (_ sucess: Bool, _ results: [[String: AnyObject]]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
         
         let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
         request.addValue(OTHClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue(OTHClient.restAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        let session = URLSession.shared
-        let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) in
+       
+        let task = dataTask(with: request as URLRequest) { (data, error) in
             guard (error == nil) else {
+                completionHandlerForStudentLocation(false, nil, "Cannot download student locations.")
                 return
             }
             
-            // print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
+            guard let data = data else {
+                completionHandlerForStudentLocation(false, nil, "No data was returned by the request!")
+                return
+            }
             
             let parsedResult: [String: AnyObject]!
             
             do {
-                parsedResult = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String: AnyObject]
+                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: AnyObject]
             } catch {
-                print("Could not parse the data as JSON: '\(String(describing: data))'")
+                completionHandlerForStudentLocation(false, nil, "Could not parse the data as JSON: '\(String(describing: data))'")
                 return
             }
             
             guard let results = parsedResult["results"] as? [[String: AnyObject]] else {
-                print("Could not get the results key.")
+                completionHandlerForStudentLocation(false, nil, "Could not get the results key.")
                 return
             }
             
             completionHandlerForStudentLocation(true, results, nil)
             
-        })
-        
-        task.resume()
+        }
         
         return task
     }
     
+    // MARK: - dataTask
     func dataTask(with request: URLRequest, completionHandlerForDataTask: @escaping (_ result: Data?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         let task = session.dataTask(with: request as URLRequest) { (data, response, error) in

@@ -131,51 +131,28 @@ class LoginViewController: UIViewController {
                     return
                 }
                 
-                let range = Range(5..<data!.count)
+                // let range = Range(5..<data!.count)
                 // let newData = data?.subdata(in: range)
                 // print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
                 
                 // Getting student locations
                 
-                let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
-                request.addValue(OTHClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
-                request.addValue(OTHClient.restAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-                let session = URLSession.shared
-                let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) in
-                    guard (error == nil) else {
+                self.onTheMapClient.getStudentLocations(completionHandlerForStudentLocation: { (success, results, errorString) in
+                    
+                    if success {
+                        for result in results! {
+                            let studentLocation = StudentInformation(dictionary: result)
+                            self.studentsInformation.append(studentLocation)
+                        }
+                        print("\(self.studentsInformation.count)")
+                        DispatchQueue.main.async {
+                            self.performSegue(withIdentifier: "LogedIn", sender: self)
+                        }
+                    } else {
+                        self.loginFailed(errorString!)
                         return
                     }
-                    
-                    // print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
-                    
-                    let parsedResult: [String: AnyObject]!
-                    
-                    do {
-                        parsedResult = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String: AnyObject]
-                    } catch {
-                        print("Could not parse the data as JSON: '\(String(describing: data))'")
-                        return
-                    }
-                    
-                    guard let results = parsedResult["results"] as? [[String: AnyObject]] else {
-                        print("Could not get the results key.")
-                        return
-                    }
-                    
-                    for result in results {
-                        let studentLocation = StudentInformation(dictionary: result)
-                        self.studentsInformation.append(studentLocation)
-                    }
-                    
-                    print("\(self.studentsInformation.count)")
-                    
-                    DispatchQueue.main.async {
-                        self.performSegue(withIdentifier: "LogedIn", sender: self)
-                    }
-                    
                 })
-                
-                task.resume()
                 
             })
             
