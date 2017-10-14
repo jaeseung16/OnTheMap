@@ -44,13 +44,119 @@ class OTHClient: NSObject {
         }
     }*/
     
-    // MARK: getPublicUserData
-    /*
-    func getPublicUserData(completionHandlerForUserData: @escaping (_ success: Bool, _ results: [[String: AnyObject]]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
+    // MARK: getSessionID
+    
+    func getSessionID(with parameters: [String: String], completionHandlerForSessionID: @escaping (_ success: Bool, _ parsedData: [[String: AnyObject]]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
         
-        let task
-        return
-    }*/
+        let email = parameters["email"]
+        let password = parameters["password"]
+        
+        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = "{\"udacity\": {\"username\": \"\(email!)\", \"password\": \"\(password!)\"}}".data(using: String.Encoding.utf8)
+        
+        let task = dataTask(with: request as URLRequest) { (data, error) in
+            guard (error == nil) else {
+                guard let errorString = error!.userInfo[NSLocalizedDescriptionKey] as? String else {
+                    completionHandlerForSessionID(false, nil, "There was an unknown error with your request.")
+                    return
+                }
+                
+                if errorString.starts(with: "There was an error with your request: ") {
+                    completionHandlerForSessionID(false, nil, "The request timed out.")
+                } else if errorString == "Your request returned a status code other than 2xx!" {
+                    completionHandlerForSessionID(false, nil, "Account not found. Wrong email or password.")
+                } else {
+                    completionHandlerForSessionID(false, nil, errorString)
+                }
+                return
+            }
+           
+            guard let data = data else {
+                completionHandlerForSessionID(false, nil, "No data was returned by the request!")
+                return
+            }
+            let range = Range(5..<data.count)
+            let newData = data.subdata(in: range)
+            // print(NSString(data: newData, encoding: String.Encoding.utf8.rawValue)!)
+            
+            let parsedResult: [String: AnyObject]!
+            
+            do {
+                parsedResult = try JSONSerialization.jsonObject(with: newData, options: .allowFragments) as! [String: AnyObject]
+            } catch {
+                completionHandlerForSessionID(false, nil, "Could not parse the data as JSON: '\(data)'")
+                return
+            }
+            
+            if let _ = parsedResult["status"] as? Int {
+                // self.loginFailed("Incorrect email or password")
+                return
+            }
+            
+            guard let account = parsedResult["account"] as? [String: AnyObject], let key = account["key"] as? String else {
+                completionHandlerForSessionID(false, nil, "Could not parse the data as JSON: '\(data)'")
+                return
+            }
+            
+            OTHClient.sharedInstance().userID = key
+            
+            guard let sessionID = parsedResult["session"] as? [String: AnyObject], let id = sessionID["id"] as? String else {
+                completionHandlerForSessionID(false, nil, "Could not get the session ID.")
+                return
+            }
+            
+            OTHClient.sharedInstance().sessionID = id
+            print(id)
+            
+            completionHandlerForSessionID(true, nil, nil)
+            
+        }
+            
+        return task
+    }
+    
+    // MARK: getPublicUserData
+    
+    func getPublicUserData(completionHandlerForUserData: @escaping (_ success: Bool, _ userData: [String: AnyObject]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
+        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/users/\(self.userID!)")!)
+        
+        let task = dataTask(with: request as URLRequest) { (data, error) in
+            guard (error == nil) else {
+                completionHandlerForUserData(false, nil, "Cannot download public user data.")
+                return
+            }
+            
+            guard let data = data else {
+                completionHandlerForUserData(false, nil, "No data was returned by the request!")
+                return
+            }
+            
+            let range = Range(5..<data.count)
+            let newData = data.subdata(in: range)
+            
+            let parsedResult: [String: AnyObject]!
+            
+            do {
+                parsedResult = try JSONSerialization.jsonObject(with: newData, options: .allowFragments) as! [String: AnyObject]
+            } catch {
+                completionHandlerForUserData(false, nil, "Could not parse the data as JSON: '\(String(describing: newData))'")
+                return
+            }
+            
+            guard let userData = parsedResult["user"] as? [String: AnyObject] else {
+                completionHandlerForUserData(false, nil, "Could not get the user key.")
+                return
+            }
+            
+            completionHandlerForUserData(true, userData, nil)
+            // print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
+        }
+        
+        return task
+    }
     
     // MARK: getStudentLocations
     
@@ -101,7 +207,9 @@ class OTHClient: NSObject {
                 let userInfo = [NSLocalizedDescriptionKey: error]
                 completionHandlerForDataTask(nil, NSError(domain: "dataTask", code: 1, userInfo: userInfo))
             }
+            
             guard (error == nil) else {
+                print("\(error!)")
                 sendError("There was an error with your request: \(error!)")
                 return
             }

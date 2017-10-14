@@ -15,6 +15,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var websiteTextField: UITextField!
     @IBOutlet weak var locationMapView: MKMapView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     @IBOutlet weak var findButton: UIButton!
     @IBOutlet weak var submitButton: UIButton!
@@ -28,6 +29,9 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         // Do any additional setup after loading the view.
         locationMapView.isHidden = true
         submitButton.isHidden = true
+        
+        activityIndicator.hidesWhenStopped = true;
+        activityIndicator.center = view.center
     }
 
     override func didReceiveMemoryWarning() {
@@ -50,7 +54,9 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         self.dismiss(animated: true)
     }
     
-    @IBAction func submit(_ sender: UIButton) {
+    @IBAction func find(_ sender: UIButton) {
+        
+        activityIndicator.startAnimating()
         
         let geoCoder = CLGeocoder()
         geoCoder.geocodeAddressString(locationTextField.text!) { (placeMark, error) in
@@ -80,7 +86,15 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
             }
             
             print("latitude: \(location.coordinate.latitude), longitude: \(location.coordinate.longitude)")
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+            }
         }
+    }
+    
+    @IBAction func submit(_ sender: UIButton) {
+        
+        
         
     }
     
@@ -105,4 +119,11 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         return pinView
     }
     */
+}
+
+extension InformationPostingViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 }

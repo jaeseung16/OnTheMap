@@ -23,6 +23,9 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="OPD-ln-WHy"/>
+                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tXY-if-h6J">
                                 <rect key="frame" x="16" y="312" width="343" height="30"/>
@@ -36,10 +39,17 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="pjl-tQ-J5e"/>
+                                </connections>
                             </textField>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo-U" translatesAutoresizingMaskIntoConstraints="NO" id="Jkw-vl-899">
                                 <rect key="frame" x="156" y="97" width="62" height="62"/>
                             </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="tls-TU-SEg">
+                                <rect key="frame" x="177" y="350" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -60,6 +70,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="gmy-RR-ZHW"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="tls-TU-SEg" id="XG3-ii-Rzf"/>
                         <outlet property="emailTextField" destination="EZB-ib-S9T" id="PfU-6c-xfd"/>
                         <outlet property="passwordTextField" destination="dTE-HX-wH9" id="rBV-r4-cum"/>
                         <segue destination="zx1-5W-Jp2" kind="show" identifier="LogedIn" id="ily-Xq-kC5"/>
@@ -219,7 +230,7 @@
                         <rightBarButtonItems>
                             <barButtonItem image="Icon_AddPin" id="c6T-ow-Xnq">
                                 <connections>
-                                    <segue destination="0Y0-SD-4V5" kind="presentation" id="ky2-fO-A0u"/>
+                                    <action selector="addLocation:" destination="91k-8X-64N" id="KlF-rK-tXe"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem image="Icon_Refresh" id="sSY-4P-5t8"/>
@@ -264,6 +275,9 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="0Y0-SD-4V5" id="3SW-qL-SjI"/>
+                                </connections>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter a Website" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZnZ-4R-nhC">
                                 <rect key="frame" x="16" y="175" width="343" height="30"/>
@@ -271,13 +285,16 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="0Y0-SD-4V5" id="4vN-2F-YWC"/>
+                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B9a-8X-QKv">
                                 <rect key="frame" x="16" y="213" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Find on the Map"/>
                                 <connections>
-                                    <action selector="submit:" destination="0Y0-SD-4V5" eventType="touchUpInside" id="COc-f9-GZy"/>
+                                    <action selector="find:" destination="0Y0-SD-4V5" eventType="touchUpInside" id="rtG-5S-obe"/>
                                 </connections>
                             </button>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ibR-uM-Ex1">
@@ -290,7 +307,14 @@
                                 <rect key="frame" x="16" y="597" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Submit"/>
+                                <connections>
+                                    <action selector="submit:" destination="0Y0-SD-4V5" eventType="touchUpInside" id="2FC-51-GIx"/>
+                                </connections>
                             </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="oFS-O1-YAV">
+                                <rect key="frame" x="177" y="439" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -302,6 +326,7 @@
                         <viewLayoutGuide key="safeArea" id="1Pp-mz-vxQ"/>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="oFS-O1-YAV" id="PFl-yS-mcC"/>
                         <outlet property="findButton" destination="B9a-8X-QKv" id="zs8-TV-kgq"/>
                         <outlet property="locationMapView" destination="ibR-uM-Ex1" id="Gy2-hc-nos"/>
                         <outlet property="locationTextField" destination="lj3-Um-4TI" id="yzt-Sb-Nu7"/>
@@ -325,7 +350,4 @@
         <image name="Icon_World" width="52" height="67"/>
         <image name="Logo-U" width="62" height="62"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="y9T-Mq-0Tu"/>
-    </inferredMetricsTieBreakers>
 </document>
