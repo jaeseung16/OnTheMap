@@ -1,5 +1,5 @@
 //
-//  OTHTableViewController.swift
+//  OTMTableViewController.swift
 //  OnTheMap
 //
 //  Created by Jae-Seung Lee on 10/8/17.
@@ -8,10 +8,10 @@
 
 import UIKit
 
-class OTHTableViewController: UITableViewController {
+class OTMTableViewController: UITableViewController {
     
     var locations = [StudentInformation]()
-    let reuseIdentifier = "OTHTableViewCell"
+    let reuseIdentifier = "OTMTableViewCell"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,10 +72,10 @@ class OTHTableViewController: UITableViewController {
     }
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
-        let _ = OTHClient.sharedInstance().logOut { (success, sessionID, errorString) in
+        let _ = OTMClient.sharedInstance().logOut { (success, sessionID, errorString) in
             
             if success {
-                OTHClient.sharedInstance().reset()
+                OTMClient.sharedInstance().reset()
                 DispatchQueue.main.async {
                     self.dismiss(animated: true)
                 }

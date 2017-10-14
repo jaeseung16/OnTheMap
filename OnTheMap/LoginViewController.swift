@@ -15,7 +15,7 @@ class LoginViewController: UIViewController {
     
     var studentsInformation = [StudentInformation]()
     var publicUserData = [String: String]()
-    var onTheMapClient: OTHClient!
+    var onTheMapClient: OTMClient!
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
@@ -23,7 +23,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        onTheMapClient = OTHClient.sharedInstance()
+        onTheMapClient = OTMClient.sharedInstance()
         
         activityIndicator.hidesWhenStopped = true;
         activityIndicator.center = view.center

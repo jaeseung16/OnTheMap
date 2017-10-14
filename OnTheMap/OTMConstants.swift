@@ -1,5 +1,5 @@
 //
-//  OTHConstants.swift
+//  OTMConstants.swift
 //  OnTheMap
 //
 //  Created by Jae-Seung Lee on 10/11/17.
@@ -8,13 +8,19 @@
 
 import Foundation
 
-extension OTHClient {
+extension OTMClient {
     
     // MARK: API Keys
     static let applicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
     static let restAPIKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
     
     // MARK: URLs
+    static let scheme = "https"
+    static let hostUdacity = "www.udacity.com"
+    static let hostParse = "parse.udacity.com"
+    static let pathAPI = "/api/session"
+    static let pathParse = "/parse/classes/StudentLocation"
+    
     static let SessionURL = "https://www.udacity.com/api/session"
     static let ParseURL = "https://parse.udacity.com/parse/classes/StudentLocation"
     

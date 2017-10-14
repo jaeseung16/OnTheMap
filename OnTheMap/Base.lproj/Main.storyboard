@@ -100,7 +100,7 @@
         <!--Table View Controller-->
         <scene sceneID="VPB-KR-aFp">
             <objects>
-                <tableViewController id="7JK-tg-MbD" userLabel="Table View Controller" customClass="OTHTableViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="7JK-tg-MbD" userLabel="Table View Controller" customClass="OTMTableViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="G8R-iY-1Fk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

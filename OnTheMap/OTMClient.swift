@@ -1,5 +1,5 @@
 //
-//  OTHClient.swift
+//  OTMClient.swift
 //  OnTheMap
 //
 //  Created by Jae-Seung Lee on 10/10/17.
@@ -8,9 +8,9 @@
 
 import Foundation
 
-// MARK: - OTHClient: NSObject
+// MARK: - OTMClient: NSObject
 
-class OTHClient: NSObject {
+class OTMClient: NSObject {
     // MARK: Properties
     
     // shared session
@@ -29,9 +29,9 @@ class OTHClient: NSObject {
     
     // MARK: Shared Instance
     
-    class func sharedInstance() -> OTHClient {
+    class func sharedInstance() -> OTMClient {
         struct Singleton {
-            static var sharedInstance = OTHClient()
+            static var sharedInstance = OTMClient()
         }
         return Singleton.sharedInstance
     }
@@ -101,14 +101,14 @@ class OTHClient: NSObject {
                 return
             }
             
-            OTHClient.sharedInstance().userID = key
+            OTMClient.sharedInstance().userID = key
             
             guard let sessionID = parsedResult["session"] as? [String: AnyObject], let id = sessionID["id"] as? String else {
                 completionHandlerForSessionID(false, nil, "Could not get the session ID.")
                 return
             }
             
-            OTHClient.sharedInstance().sessionID = id
+            OTMClient.sharedInstance().sessionID = id
             print(id)
             
             completionHandlerForSessionID(true, nil, nil)
@@ -163,9 +163,56 @@ class OTHClient: NSObject {
     func getStudentLocations(completionHandlerForStudentLocation: @escaping (_ sucess: Bool, _ results: [[String: AnyObject]]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
         
         let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
-        request.addValue(OTHClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(OTHClient.restAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+        request.addValue(OTMClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue(OTMClient.restAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
        
+        let task = dataTask(with: request as URLRequest) { (data, error) in
+            guard (error == nil) else {
+                completionHandlerForStudentLocation(false, nil, "Cannot download student locations.")
+                return
+            }
+            
+            guard let data = data else {
+                completionHandlerForStudentLocation(false, nil, "No data was returned by the request!")
+                return
+            }
+            
+            let parsedResult: [String: AnyObject]!
+            
+            do {
+                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: AnyObject]
+            } catch {
+                completionHandlerForStudentLocation(false, nil, "Could not parse the data as JSON: '\(String(describing: data))'")
+                return
+            }
+            
+            guard let results = parsedResult["results"] as? [[String: AnyObject]] else {
+                completionHandlerForStudentLocation(false, nil, "Could not get the results key.")
+                return
+            }
+            
+            completionHandlerForStudentLocation(true, results, nil)
+            
+        }
+        
+        return task
+    }
+    
+    // MARK: getAStudentLocation
+    
+    func getAStudentLocation(completionHandlerForStudentLocation: @escaping (_ sucess: Bool, _ results: [[String: AnyObject]]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
+        
+        var component = URLComponents()
+        component.scheme = "https"
+        component.host = "parse.udacity.com"
+        component.path = "/parse/classes/StudentLocation"
+        component.queryItems = [URLQueryItem]()
+        component.queryItems!.append( URLQueryItem(name: "where", value: "{\"uniqueKey\":\"\(OTMClient.sharedInstance().userID)\"}") )
+        
+        let request = NSMutableURLRequest(url: component.url!)
+        request.addValue(OTMClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue(OTMClient.restAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+        
         let task = dataTask(with: request as URLRequest) { (data, error) in
             guard (error == nil) else {
                 completionHandlerForStudentLocation(false, nil, "Cannot download student locations.")
@@ -289,8 +336,10 @@ class OTHClient: NSObject {
     }
     
     func reset() {
-        OTHClient.sharedInstance().sessionID = nil
-        OTHClient.sharedInstance().userID = nil
+        OTMClient.sharedInstance().sessionID = nil
+        OTMClient.sharedInstance().userID = nil
     }
+    
+    // MARK: - Getting a student location
     
 }

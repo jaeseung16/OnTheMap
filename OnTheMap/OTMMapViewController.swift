@@ -38,7 +38,7 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
             
         }
         
-        print(annotations.count)
+        // print(annotations.count)
         self.mapView.addAnnotations(annotations)
     }
 
@@ -49,10 +49,10 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
         
-        let _ = OTHClient.sharedInstance().logOut { (success, sessionID, errorString) in
+        let _ = OTMClient.sharedInstance().logOut { (success, sessionID, errorString) in
             
             if success {
-                OTHClient.sharedInstance().reset()
+                OTMClient.sharedInstance().reset()
                 DispatchQueue.main.async {
                     self.dismiss(animated: true)
                 }
@@ -70,10 +70,19 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func addLocation(_ sender: UIBarButtonItem) {
         
+        guard let uniqueKey = OTMClient.sharedInstance().userID else {
+            return
+        }
+        print(uniqueKey)
         
-        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where={\"uniqueKey\":\(OTHClient.sharedInstance().userID)}"
-        let url = URL(string: urlString)
-        let request = NSMutableURLRequest(url: url!)
+        var component = URLComponents()
+        component.scheme = "https"
+        component.host = "parse.udacity.com"
+        component.path = "/parse/classes/StudentLocation"
+        component.queryItems = [URLQueryItem]()
+        component.queryItems!.append( URLQueryItem(name: "where", value: "{\"uniqueKey\":\"661149902\"}") )
+        
+        let request = NSMutableURLRequest(url: component.url!)
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
         let session = URLSession.shared
@@ -81,6 +90,11 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
             if error != nil { // Handle error
                 return
             }
+            guard (error == nil) else {
+                
+                return
+            }
+            
             print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
         }
         task.resume()
