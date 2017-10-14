@@ -15,11 +15,13 @@ extension OTMClient {
     static let restAPIKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
     
     // MARK: URLs
-    static let scheme = "https"
-    static let hostUdacity = "www.udacity.com"
-    static let hostParse = "parse.udacity.com"
-    static let pathAPI = "/api/session"
-    static let pathParse = "/parse/classes/StudentLocation"
+    struct OTMConstant {
+        static let scheme = "https"
+        static let hostUdacity = "www.udacity.com"
+        static let hostParse = "parse.udacity.com"
+        static let pathAPI = "/api/session"
+        static let pathParse = "/parse/classes/StudentLocation"
+    }
     
     static let SessionURL = "https://www.udacity.com/api/session"
     static let ParseURL = "https://parse.udacity.com/parse/classes/StudentLocation"

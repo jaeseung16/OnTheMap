@@ -20,6 +20,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var findButton: UIButton!
     @IBOutlet weak var submitButton: UIButton!
     
+    var studentLocation: [String: AnyObject]!
     var location = CLLocation()
     var mapRect = MKMapRect()
     

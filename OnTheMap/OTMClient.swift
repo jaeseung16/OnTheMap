@@ -200,14 +200,15 @@ class OTMClient: NSObject {
     
     // MARK: getAStudentLocation
     
-    func getAStudentLocation(completionHandlerForStudentLocation: @escaping (_ sucess: Bool, _ results: [[String: AnyObject]]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
+    func getAStudentLocation(completionHandlerForStudentLocation: @escaping (_ sucess: Bool, _ result: [String: AnyObject]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
         
         var component = URLComponents()
-        component.scheme = "https"
-        component.host = "parse.udacity.com"
-        component.path = "/parse/classes/StudentLocation"
+        component.scheme = OTMClient.OTMConstant.scheme
+        component.host = OTMClient.OTMConstant.hostParse
+        component.path = OTMClient.OTMConstant.pathParse
         component.queryItems = [URLQueryItem]()
-        component.queryItems!.append( URLQueryItem(name: "where", value: "{\"uniqueKey\":\"\(OTMClient.sharedInstance().userID)\"}") )
+        component.queryItems!.append( URLQueryItem(name: "where", value: "{\"uniqueKey\":\"\(OTMClient.sharedInstance().userID!)\"}") )
+        print("\(component.url!)")
         
         let request = NSMutableURLRequest(url: component.url!)
         request.addValue(OTMClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
@@ -215,7 +216,7 @@ class OTMClient: NSObject {
         
         let task = dataTask(with: request as URLRequest) { (data, error) in
             guard (error == nil) else {
-                completionHandlerForStudentLocation(false, nil, "Cannot download student locations.")
+                completionHandlerForStudentLocation(false, nil, "Cannot download the student location.")
                 return
             }
             
@@ -233,12 +234,12 @@ class OTMClient: NSObject {
                 return
             }
             
-            guard let results = parsedResult["results"] as? [[String: AnyObject]] else {
-                completionHandlerForStudentLocation(false, nil, "Could not get the results key.")
+            guard let result = parsedResult["results"] as? [String: AnyObject], let _ = result["uniqueKey"] as? String else {
+                completionHandlerForStudentLocation(false, nil, "Could not find the student location.")
                 return
             }
             
-            completionHandlerForStudentLocation(true, results, nil)
+            completionHandlerForStudentLocation(true, result, nil)
             
         }
         

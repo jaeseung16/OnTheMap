@@ -70,6 +70,44 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func addLocation(_ sender: UIBarButtonItem) {
         
+        let _ = OTMClient.sharedInstance().getAStudentLocation { (success, result, errorString) in
+            if success {
+                DispatchQueue.main.async {
+                    let message = "You already posted a student location. Would you like to overwrite your location?"
+                    let alert = UIAlertController(title: "Login Failed", message: message, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Overwrite", style: .default, handler: { _ in
+                        NSLog("Overwriting")
+                        print("overwrite")
+                        return
+                    }))
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { _ in
+                        NSLog("Overwriting Canceled.")
+                        print("not overwrite")
+                        return
+                    }))
+                    
+                    self.present(alert, animated: true, completion: nil)
+
+                }
+            } else {
+                print("new location")
+                
+                guard (errorString == "Could not find the student location.") else {
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    var informationPostingViewController: InformationPostingViewController
+                    informationPostingViewController = self.storyboard?.instantiateViewController(withIdentifier: "InformationPostingVC") as! InformationPostingViewController
+                    
+                    informationPostingViewController.studentLocation = result
+                    
+                    self.navigationController?.pushViewController(informationPostingViewController, animated: true)
+                    
+                }
+            }
+        }
+        /*
         guard let uniqueKey = OTMClient.sharedInstance().userID else {
             return
         }
@@ -97,7 +135,7 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
             
             print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
         }
-        task.resume()
+        task.resume()*/
     }
     
     /*

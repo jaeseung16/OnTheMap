@@ -247,7 +247,7 @@
         <!--Information Posting View Controller-->
         <scene sceneID="V9N-zM-xkA">
             <objects>
-                <viewController id="0Y0-SD-4V5" customClass="InformationPostingViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="InformationPostingVC" id="0Y0-SD-4V5" customClass="InformationPostingViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ym3-Ja-8fD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
