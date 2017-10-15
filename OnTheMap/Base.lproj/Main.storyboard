@@ -148,11 +148,7 @@
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem image="Icon_AddPin" id="JcR-Zf-y45">
-                                <connections>
-                                    <segue destination="0Y0-SD-4V5" kind="presentation" id="y9T-Mq-0Tu"/>
-                                </connections>
-                            </barButtonItem>
+                            <barButtonItem image="Icon_AddPin" id="JcR-Zf-y45"/>
                             <barButtonItem image="Icon_Refresh" id="atA-fk-337"/>
                         </rightBarButtonItems>
                     </navigationItem>
@@ -233,7 +229,11 @@
                                     <action selector="addLocation:" destination="91k-8X-64N" id="KlF-rK-tXe"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="Icon_Refresh" id="sSY-4P-5t8"/>
+                            <barButtonItem image="Icon_Refresh" id="sSY-4P-5t8">
+                                <connections>
+                                    <action selector="refresh:" destination="91k-8X-64N" id="okg-7s-lpv"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
@@ -253,7 +253,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lON-SZ-Wt7">
-                                <rect key="frame" x="0.0" y="10" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Add Location" id="rA0-8z-xO6">
@@ -266,11 +266,11 @@
                                 </items>
                             </navigationBar>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Icon_World" translatesAutoresizingMaskIntoConstraints="NO" id="E5s-U5-QWI">
-                                <rect key="frame" x="161" y="62" width="52" height="67"/>
+                                <rect key="frame" x="161" y="85" width="52" height="67"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter a Location" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lj3-Um-4TI">
-                                <rect key="frame" x="16" y="137" width="343" height="30"/>
+                                <rect key="frame" x="16" y="160" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -280,7 +280,7 @@
                                 </connections>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter a Website" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZnZ-4R-nhC">
-                                <rect key="frame" x="16" y="175" width="343" height="30"/>
+                                <rect key="frame" x="16" y="198" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -290,7 +290,7 @@
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B9a-8X-QKv">
-                                <rect key="frame" x="16" y="213" width="343" height="30"/>
+                                <rect key="frame" x="16" y="236" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Find on the Map"/>
                                 <connections>
@@ -298,29 +298,30 @@
                                 </connections>
                             </button>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ibR-uM-Ex1">
-                                <rect key="frame" x="16" y="251" width="343" height="396"/>
+                                <rect key="frame" x="16" y="274" width="343" height="335"/>
                                 <connections>
                                     <outlet property="delegate" destination="0Y0-SD-4V5" id="dRb-x6-KuG"/>
                                 </connections>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GNf-OK-E5v">
-                                <rect key="frame" x="16" y="597" width="343" height="30"/>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="oFS-O1-YAV">
+                                <rect key="frame" x="177" y="439" width="20" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GNf-OK-E5v">
+                                <rect key="frame" x="16" y="617" width="343" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Submit"/>
                                 <connections>
                                     <action selector="submit:" destination="0Y0-SD-4V5" eventType="touchUpInside" id="2FC-51-GIx"/>
                                 </connections>
                             </button>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="oFS-O1-YAV">
-                                <rect key="frame" x="177" y="439" width="20" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="1Pp-mz-vxQ" firstAttribute="bottom" secondItem="ibR-uM-Ex1" secondAttribute="bottom" constant="20" id="A4p-gp-yg2"/>
+                            <constraint firstItem="1Pp-mz-vxQ" firstAttribute="bottom" secondItem="ibR-uM-Ex1" secondAttribute="bottom" constant="58" id="A4p-gp-yg2"/>
                             <constraint firstItem="ibR-uM-Ex1" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="WAx-ED-JOw"/>
-                            <constraint firstItem="ibR-uM-Ex1" firstAttribute="top" secondItem="1Pp-mz-vxQ" secondAttribute="top" constant="231" id="aTq-R0-oFm"/>
+                            <constraint firstItem="ibR-uM-Ex1" firstAttribute="top" secondItem="1Pp-mz-vxQ" secondAttribute="top" constant="254" id="aTq-R0-oFm"/>
                             <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="ibR-uM-Ex1" secondAttribute="trailing" constant="16" id="oKF-DP-1YR"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="1Pp-mz-vxQ"/>

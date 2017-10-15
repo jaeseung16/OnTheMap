@@ -33,6 +33,10 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         
         activityIndicator.hidesWhenStopped = true;
         activityIndicator.center = view.center
+        
+        // Remove these two lines later
+        locationTextField.text = "New York"
+        websiteTextField.text = "https://www.google.com"
     }
 
     override func didReceiveMemoryWarning() {
@@ -63,11 +67,17 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         geoCoder.geocodeAddressString(locationTextField.text!) { (placeMark, error) in
             guard (error == nil) else {
                 print("There is an error.")
+                DispatchQueue.main.async {
+                    self.activityIndicator.stopAnimating()
+                }
                 return
             }
             
             guard let location = placeMark?[0].location else {
                 print("No location received.")
+                DispatchQueue.main.async {
+                    self.activityIndicator.stopAnimating()
+                }
                 return
             }
             
@@ -95,8 +105,38 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func submit(_ sender: UIButton) {
         
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        /*
+        var parameters = [String: String]()
+        parameters["uniqueKey"] = OTMClient.sharedInstance().userID
+        // parameters["firstName"]
+        // parameters["lastName"]
+        parameters["mapString"] = locationTextField.text!
+        parameters["mediaURL"] = websiteTextField.text!
+        parameters["latitude"] = "\(location.coordinate.latitude)"
+        parameters["longitude"] = "\(location.coordinate.longitude)"
+        */
+        let parameters = "{\"uniqueKey\": \"\(OTMClient.sharedInstance().userID!)\", \"firstName\": \"John\", \"lastName\": \"Doe\",\"mapString\": \"\(locationTextField.text!)\", \"mediaURL\": \"\(websiteTextField.text!)\",\"latitude\": \(location.coordinate.latitude), \"longitude\": \(location.coordinate.longitude)}"
         
-        
+        let _ = OTMClient.sharedInstance().postAStudentLocation(with: parameters) { (success, result, errorString) in
+            if success {
+                print("success")
+                
+                self.dismiss(animated: true)
+                
+            } else {
+                print("fail: \(errorString!)")
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(title: "Post Failed", message: "Post Failed", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+                        NSLog("Login Failed")
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                    
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                }
+            }
+        }
     }
     
     // MARK: - MKMapViewDelegate

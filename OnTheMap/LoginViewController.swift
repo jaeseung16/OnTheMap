@@ -35,6 +35,10 @@ class LoginViewController: UIViewController {
         
         emailTextField.isEnabled = true
         passwordTextField.isEnabled = true
+        
+        // Remove these two lines later
+        emailTextField.text = "jaeseung@gmail.com"
+        passwordTextField.text = "6Uq-yNP-VUp-dUQ"
     }
 
     override func didReceiveMemoryWarning() {
@@ -66,9 +70,6 @@ class LoginViewController: UIViewController {
  
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         activityIndicator.startAnimating()
-        
-        // email = "jaeseung@gmail.com"
-        // password = "6Uq-yNP-VUp-dUQ"
         
         let _ = onTheMapClient.getSessionID(with: ["email": email, "password": password]) { (success, results, errorString) in
             if success {

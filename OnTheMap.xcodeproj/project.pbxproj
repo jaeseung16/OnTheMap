@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B2D8D291F93AA5E00CA3509 /* OTMLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2D8D281F93AA5E00CA3509 /* OTMLocations.swift */; };
 		0B682C961F8A537900A4779A /* OTMTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B682C951F8A537900A4779A /* OTMTableViewController.swift */; };
 		0B6A57A81F8C10900042EDCD /* InformationPostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6A57A71F8C10900042EDCD /* InformationPostingViewController.swift */; };
 		0B6E8A471F8D5D390060E1E4 /* OTMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6E8A461F8D5D390060E1E4 /* OTMClient.swift */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0B2D8D281F93AA5E00CA3509 /* OTMLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTMLocations.swift; sourceTree = "<group>"; };
 		0B682C951F8A537900A4779A /* OTMTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTMTableViewController.swift; sourceTree = "<group>"; };
 		0B6A57A71F8C10900042EDCD /* InformationPostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationPostingViewController.swift; sourceTree = "<group>"; };
 		0B6E8A461F8D5D390060E1E4 /* OTMClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTMClient.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 				0BA9A0541F8EDA5D000432AB /* OTMConstants.swift */,
 				0BFD06261F8979F400460564 /* OTMMapViewController.swift */,
 				0B682C951F8A537900A4779A /* OTMTableViewController.swift */,
+				0B2D8D281F93AA5E00CA3509 /* OTMLocations.swift */,
 				0BFD06241F89772C00460564 /* OnTheMapTabBarController.swift */,
 				0BA9DD221F858F5F00247CFF /* Assets.xcassets */,
 				0BA9DD241F858F5F00247CFF /* LaunchScreen.storyboard */,
@@ -166,6 +169,7 @@
 				0BA9DD1E1F858F5F00247CFF /* LoginViewController.swift in Sources */,
 				0BA9DD1C1F858F5F00247CFF /* AppDelegate.swift in Sources */,
 				0BA9A0551F8EDA5D000432AB /* OTMConstants.swift in Sources */,
+				0B2D8D291F93AA5E00CA3509 /* OTMLocations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

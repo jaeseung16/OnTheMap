@@ -11,6 +11,8 @@ import MapKit
 
 class OTMMapViewController: UIViewController, MKMapViewDelegate {
 
+    var annotations = [MKPointAnnotation]()
+    
     @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
@@ -18,9 +20,7 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
 
         // Do any additional setup after loading the view.
         
-        let locations = (self.navigationController?.tabBarController as! OnTheMapTabBarController).studentsInformation
-        
-        var annotations = [MKPointAnnotation]()
+        var locations = (self.navigationController?.tabBarController as! OnTheMapTabBarController).studentsInformation
         
         for location in locations {
             
@@ -39,6 +39,7 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
         }
         
         // print(annotations.count)
+        self.mapView.removeAnnotations(annotations)
         self.mapView.addAnnotations(annotations)
     }
 
@@ -66,6 +67,53 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
                 }
             }
         }
+    }
+    
+    @IBAction func refresh(_ sender: UIBarButtonItem) {
+        let _ = OTMClient.sharedInstance().getStudentLocations(completionHandlerForStudentLocation: { (success, results, errorString) in
+            
+            if success {
+                DispatchQueue.main.async {
+                    var locations = [StudentInformation]()
+                    for result in results! {
+                        let studentLocation = StudentInformation(dictionary: result)
+                        locations.append(studentLocation)
+                    }
+                    self.mapView.removeAnnotations(self.annotations)
+                    
+                    self.annotations = []
+                    
+                    for location in locations {
+                        
+                        let latitude = location.latitude
+                        let longitude = location.longitude
+                        
+                        let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude))
+                        
+                        let annotation = MKPointAnnotation()
+                        annotation.coordinate = coordinate
+                        annotation.title = "\(location.firstName) \(location.lastName)"
+                        annotation.subtitle = location.mediaURL
+                        
+                        self.annotations.append(annotation)
+                        
+                    }
+                    
+                    // print(annotations.count)
+                    self.mapView.addAnnotations(self.annotations)
+                    
+                    print("\(locations.count)")
+                    
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    //self.activityIndicator.stopAnimating()
+                    //self.performSegue(withIdentifier: "LogedIn", sender: self)
+                }
+            } else {
+                //self.loginFailed(errorString!)
+                print("Refresh failed")
+                return
+            }
+        })
     }
     
     @IBAction func addLocation(_ sender: UIBarButtonItem) {
@@ -102,40 +150,12 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
                     
                     informationPostingViewController.studentLocation = result
                     
-                    self.navigationController?.pushViewController(informationPostingViewController, animated: true)
-                    
+                    // self.navigationController?.pushViewController(informationPostingViewController, animated: true)
+                    self.present(informationPostingViewController, animated: true, completion: nil)
                 }
             }
         }
-        /*
-        guard let uniqueKey = OTMClient.sharedInstance().userID else {
-            return
-        }
-        print(uniqueKey)
         
-        var component = URLComponents()
-        component.scheme = "https"
-        component.host = "parse.udacity.com"
-        component.path = "/parse/classes/StudentLocation"
-        component.queryItems = [URLQueryItem]()
-        component.queryItems!.append( URLQueryItem(name: "where", value: "{\"uniqueKey\":\"661149902\"}") )
-        
-        let request = NSMutableURLRequest(url: component.url!)
-        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
-        let session = URLSession.shared
-        let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            if error != nil { // Handle error
-                return
-            }
-            guard (error == nil) else {
-                
-                return
-            }
-            
-            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
-        }
-        task.resume()*/
     }
     
     /*
