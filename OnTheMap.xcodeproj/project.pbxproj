@@ -18,7 +18,6 @@
 		0BA9DD211F858F5F00247CFF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BA9DD1F1F858F5F00247CFF /* Main.storyboard */; };
 		0BA9DD231F858F5F00247CFF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BA9DD221F858F5F00247CFF /* Assets.xcassets */; };
 		0BA9DD261F858F5F00247CFF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BA9DD241F858F5F00247CFF /* LaunchScreen.storyboard */; };
-		0BFD06251F89772C00460564 /* OnTheMapTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFD06241F89772C00460564 /* OnTheMapTabBarController.swift */; };
 		0BFD06271F8979F400460564 /* OTMMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFD06261F8979F400460564 /* OTMMapViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -36,7 +35,6 @@
 		0BA9DD221F858F5F00247CFF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0BA9DD251F858F5F00247CFF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0BA9DD271F858F5F00247CFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0BFD06241F89772C00460564 /* OnTheMapTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnTheMapTabBarController.swift; sourceTree = "<group>"; };
 		0BFD06261F8979F400460564 /* OTMMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTMMapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -80,7 +78,6 @@
 				0BFD06261F8979F400460564 /* OTMMapViewController.swift */,
 				0B682C951F8A537900A4779A /* OTMTableViewController.swift */,
 				0B2D8D281F93AA5E00CA3509 /* OTMLocations.swift */,
-				0BFD06241F89772C00460564 /* OnTheMapTabBarController.swift */,
 				0BA9DD221F858F5F00247CFF /* Assets.xcassets */,
 				0BA9DD241F858F5F00247CFF /* LaunchScreen.storyboard */,
 				0BA9DD271F858F5F00247CFF /* Info.plist */,
@@ -162,7 +159,6 @@
 			files = (
 				0B9A9B531F885D1000605C0B /* StudentInformation.swift in Sources */,
 				0BFD06271F8979F400460564 /* OTMMapViewController.swift in Sources */,
-				0BFD06251F89772C00460564 /* OnTheMapTabBarController.swift in Sources */,
 				0B682C961F8A537900A4779A /* OTMTableViewController.swift in Sources */,
 				0B6E8A471F8D5D390060E1E4 /* OTMClient.swift in Sources */,
 				0B6A57A81F8C10900042EDCD /* InformationPostingViewController.swift in Sources */,

@@ -11,6 +11,7 @@ import UIKit
 class OTMTableViewController: UITableViewController {
     
     var locations = [StudentInformation]()
+    let otmLocations = OTMLocations.sharedInstance
     let reuseIdentifier = "OTMTableViewCell"
 
     override func viewDidLoad() {
@@ -22,7 +23,7 @@ class OTMTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
-        let locations = (self.navigationController?.tabBarController as! OnTheMapTabBarController).studentsInformation
+        let locations = otmLocations.studentLocations
         
         for location in locations {
             self.locations.append(location)

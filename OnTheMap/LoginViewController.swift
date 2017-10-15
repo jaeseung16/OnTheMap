@@ -46,13 +46,6 @@ class LoginViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let destinationController = segue.destination as! OnTheMapTabBarController
-        
-        destinationController.studentsInformation = studentsInformation
-    }
-
 
     @IBAction func loginButtonPressed(_ sender: UIButton) {
         

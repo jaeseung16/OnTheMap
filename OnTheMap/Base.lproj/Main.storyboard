@@ -106,7 +106,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OTHTableViewCell" textLabel="muM-YT-bAM" detailTextLabel="LuP-iF-UiC" imageView="ZDx-bS-3xF" style="IBUITableViewCellStyleSubtitle" id="Tgf-Ea-8Q5">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OTMTableViewCell" textLabel="muM-YT-bAM" detailTextLabel="LuP-iF-UiC" imageView="ZDx-bS-3xF" style="IBUITableViewCellStyleSubtitle" id="Tgf-Ea-8Q5">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Tgf-Ea-8Q5" id="4iz-0I-OiU">
@@ -157,10 +157,10 @@
             </objects>
             <point key="canvasLocation" x="2553" y="480"/>
         </scene>
-        <!--On The Map Tab Bar Controller-->
+        <!--Tab Bar Controller-->
         <scene sceneID="RY1-ff-nBu">
             <objects>
-                <tabBarController id="zx1-5W-Jp2" customClass="OnTheMapTabBarController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController id="zx1-5W-Jp2" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="KDa-cC-GM3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
