@@ -16,6 +16,7 @@ class LoginViewController: UIViewController {
     var studentsInformation = [StudentInformation]()
     var publicUserData = [String: String]()
     var onTheMapClient: OTMClient!
+    let otmLocations = OTMLocations.sharedInstance
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
@@ -94,7 +95,20 @@ class LoginViewController: UIViewController {
                         self.publicUserData["lastName"] = lastName
                         
                         print("\(String(describing: self.publicUserData["lastName"]))")
+                        self.otmLocations.load(completionHandlerForLoad: { (success, errorString) in
+                            if success {
+                                DispatchQueue.main.async {
+                                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                                    self.activityIndicator.stopAnimating()
+                                    self.performSegue(withIdentifier: "LogedIn", sender: self)
+                                }
+                            } else {
+                                self.loginFailed(errorString!)
+                                return
+                            }
+                        })
                         
+                        /*
                         let _ = self.onTheMapClient.getStudentLocations(completionHandlerForStudentLocation: { (success, results, errorString) in
                             
                             if success {
@@ -112,7 +126,7 @@ class LoginViewController: UIViewController {
                                 self.loginFailed(errorString!)
                                 return
                             }
-                        })
+                        }) */
                     } else {
                         self.loginFailed(errorString!)
                         return

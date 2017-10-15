@@ -9,9 +9,11 @@
 import UIKit
 import MapKit
 
-class OTMMapViewController: UIViewController, MKMapViewDelegate {
+class OTMMapViewController: UIViewController {
 
     var annotations = [MKPointAnnotation]()
+    
+    let otmLocations = OTMLocations.sharedInstance
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -19,34 +21,15 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        
-        var locations = (self.navigationController?.tabBarController as! OnTheMapTabBarController).studentsInformation
-        
-        for location in locations {
-            
-            let latitude = location.latitude
-            let longitude = location.longitude
-            
-            let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude))
-            
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinate
-            annotation.title = "\(location.firstName) \(location.lastName)"
-            annotation.subtitle = location.mediaURL
-            
-            annotations.append(annotation)
-            
-        }
-        
-        // print(annotations.count)
-        self.mapView.removeAnnotations(annotations)
-        self.mapView.addAnnotations(annotations)
+        self.populateAnnotations()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    // MARK: - IBActions
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
         
@@ -70,39 +53,16 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func refresh(_ sender: UIBarButtonItem) {
-        let _ = OTMClient.sharedInstance().getStudentLocations(completionHandlerForStudentLocation: { (success, results, errorString) in
-            
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        self.mapView.removeAnnotations(self.annotations)
+        self.annotations = []
+        
+        otmLocations.refresh { (success, errorString) in
             if success {
                 DispatchQueue.main.async {
-                    var locations = [StudentInformation]()
-                    for result in results! {
-                        let studentLocation = StudentInformation(dictionary: result)
-                        locations.append(studentLocation)
-                    }
-                    self.mapView.removeAnnotations(self.annotations)
+                    self.populateAnnotations()
                     
-                    self.annotations = []
-                    
-                    for location in locations {
-                        
-                        let latitude = location.latitude
-                        let longitude = location.longitude
-                        
-                        let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude))
-                        
-                        let annotation = MKPointAnnotation()
-                        annotation.coordinate = coordinate
-                        annotation.title = "\(location.firstName) \(location.lastName)"
-                        annotation.subtitle = location.mediaURL
-                        
-                        self.annotations.append(annotation)
-                        
-                    }
-                    
-                    // print(annotations.count)
-                    self.mapView.addAnnotations(self.annotations)
-                    
-                    print("\(locations.count)")
+                    print("\(self.otmLocations.studentLocations.count)")
                     
                     UIApplication.shared.isNetworkActivityIndicatorVisible = false
                     //self.activityIndicator.stopAnimating()
@@ -111,9 +71,11 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
             } else {
                 //self.loginFailed(errorString!)
                 print("Refresh failed")
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 return
             }
-        })
+        }
+ 
     }
     
     @IBAction func addLocation(_ sender: UIBarButtonItem) {
@@ -168,8 +130,28 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
     }
     */
     
-    // MARK: - MKMapViewDelegate
+    // MARK: - Methods
     
+    func populateAnnotations() {
+        for location in otmLocations.studentLocations {
+            let latitude = location.latitude
+            let longitude = location.longitude
+            let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude))
+            
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinate
+            annotation.title = "\(location.firstName) \(location.lastName)"
+            annotation.subtitle = location.mediaURL
+            
+            annotations.append(annotation)
+        }
+        
+        self.mapView.addAnnotations(annotations)
+    }
+}
+
+extension OTMMapViewController: MKMapViewDelegate {
+    // MARK: - MKMapViewDelegate
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
@@ -198,5 +180,4 @@ class OTMMapViewController: UIViewController, MKMapViewDelegate {
             
         }
     }
-
 }
