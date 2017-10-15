@@ -273,13 +273,11 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Icon_World" translatesAutoresizingMaskIntoConstraints="NO" id="E5s-U5-QWI">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon_World" translatesAutoresizingMaskIntoConstraints="NO" id="E5s-U5-QWI">
                                 <rect key="frame" x="161" y="85" width="52" height="67"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter a Location" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lj3-Um-4TI">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter a Location" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lj3-Um-4TI">
                                 <rect key="frame" x="16" y="160" width="343" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -287,9 +285,8 @@
                                     <outlet property="delegate" destination="0Y0-SD-4V5" id="3SW-qL-SjI"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter a Website" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZnZ-4R-nhC">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter a Website" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZnZ-4R-nhC">
                                 <rect key="frame" x="16" y="198" width="343" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -297,9 +294,8 @@
                                     <outlet property="delegate" destination="0Y0-SD-4V5" id="4vN-2F-YWC"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B9a-8X-QKv">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B9a-8X-QKv">
                                 <rect key="frame" x="16" y="236" width="343" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Find on the Map"/>
                                 <connections>
                                     <action selector="find:" destination="0Y0-SD-4V5" eventType="touchUpInside" id="rtG-5S-obe"/>
@@ -315,9 +311,8 @@
                                 <rect key="frame" x="177" y="439" width="20" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GNf-OK-E5v">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GNf-OK-E5v">
                                 <rect key="frame" x="16" y="617" width="343" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Submit"/>
                                 <connections>
@@ -327,10 +322,25 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="1Pp-mz-vxQ" firstAttribute="bottom" secondItem="GNf-OK-E5v" secondAttribute="bottom" constant="20" id="3ep-mP-RqJ"/>
+                            <constraint firstItem="lj3-Um-4TI" firstAttribute="top" secondItem="E5s-U5-QWI" secondAttribute="bottom" constant="8" id="5uR-ca-byB"/>
+                            <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="lj3-Um-4TI" secondAttribute="trailing" constant="16" id="6Wl-xF-LBI"/>
                             <constraint firstItem="1Pp-mz-vxQ" firstAttribute="bottom" secondItem="ibR-uM-Ex1" secondAttribute="bottom" constant="58" id="A4p-gp-yg2"/>
+                            <constraint firstItem="B9a-8X-QKv" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="Ag9-dY-d9r"/>
+                            <constraint firstItem="E5s-U5-QWI" firstAttribute="centerX" secondItem="1Pp-mz-vxQ" secondAttribute="centerX" id="RDg-UR-goO"/>
                             <constraint firstItem="ibR-uM-Ex1" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="WAx-ED-JOw"/>
+                            <constraint firstItem="B9a-8X-QKv" firstAttribute="top" secondItem="ZnZ-4R-nhC" secondAttribute="bottom" constant="8" id="YQf-hl-rrl"/>
+                            <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="GNf-OK-E5v" secondAttribute="trailing" constant="16" id="Z9u-Dx-fat"/>
                             <constraint firstItem="ibR-uM-Ex1" firstAttribute="top" secondItem="1Pp-mz-vxQ" secondAttribute="top" constant="254" id="aTq-R0-oFm"/>
+                            <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="ZnZ-4R-nhC" secondAttribute="trailing" constant="16" id="hAt-XV-K6E"/>
+                            <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="B9a-8X-QKv" secondAttribute="trailing" constant="16" id="hFP-NP-60G"/>
+                            <constraint firstItem="GNf-OK-E5v" firstAttribute="top" secondItem="ibR-uM-Ex1" secondAttribute="bottom" constant="8" id="jni-sY-7mo"/>
+                            <constraint firstItem="ZnZ-4R-nhC" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="kI4-od-vOX"/>
                             <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="ibR-uM-Ex1" secondAttribute="trailing" constant="16" id="oKF-DP-1YR"/>
+                            <constraint firstItem="GNf-OK-E5v" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="qcC-w8-nfQ"/>
+                            <constraint firstItem="ZnZ-4R-nhC" firstAttribute="top" secondItem="lj3-Um-4TI" secondAttribute="bottom" constant="8" id="rgI-NU-Ju2"/>
+                            <constraint firstItem="ibR-uM-Ex1" firstAttribute="top" secondItem="B9a-8X-QKv" secondAttribute="bottom" constant="8" id="s3h-TB-4U3"/>
+                            <constraint firstItem="lj3-Um-4TI" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="vAd-7r-iEa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="1Pp-mz-vxQ"/>
                     </view>
