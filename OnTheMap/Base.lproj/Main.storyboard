@@ -148,8 +148,16 @@
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem image="Icon_AddPin" id="JcR-Zf-y45"/>
-                            <barButtonItem image="Icon_Refresh" id="atA-fk-337"/>
+                            <barButtonItem image="Icon_AddPin" id="JcR-Zf-y45">
+                                <connections>
+                                    <action selector="addLocation:" destination="7JK-tg-MbD" id="ckO-Jq-dbl"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem image="Icon_Refresh" id="atA-fk-337">
+                                <connections>
+                                    <action selector="refresh:" destination="7JK-tg-MbD" id="DMZ-Yd-bw8"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                 </tableViewController>

@@ -23,19 +23,109 @@ class OTMTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
-        let locations = otmLocations.studentLocations
-        
-        for location in locations {
+        for location in self.otmLocations.studentLocations {
             self.locations.append(location)
         }
-        
+
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    // MARK: - IBActions
+    
+    @IBAction func logout(_ sender: UIBarButtonItem) {
+        let _ = OTMClient.sharedInstance().logOut { (success, sessionID, errorString) in
+            
+            if success {
+                OTMClient.sharedInstance().reset()
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(title: "Logout Failed", message: errorString, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+                        NSLog("Logout Failed")
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+        }
+    }
+    
+    @IBAction func refresh(_ sender: UIBarButtonItem) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        self.locations = []
+        
+        otmLocations.refresh { (success, errorString) in
+            if success {
+                DispatchQueue.main.async {
+                    for location in self.otmLocations.studentLocations {
+                        self.locations.append(location)
+                    }
+                    print("\(self.otmLocations.studentLocations.count)")
+                    
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    self.tableView.reloadData()
+                    //self.activityIndicator.stopAnimating()
+                    //self.performSegue(withIdentifier: "LogedIn", sender: self)
+                }
+            } else {
+                //self.loginFailed(errorString!)
+                print("Refresh failed")
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                return
+            }
+        }
+        
+    }
+    
+    @IBAction func addLocation(_ sender: UIBarButtonItem) {
+        
+        let _ = OTMClient.sharedInstance().getAStudentLocation { (success, result, errorString) in
+            if success {
+                DispatchQueue.main.async {
+                    let message = "You already posted a student location. Would you like to overwrite your location?"
+                    let alert = UIAlertController(title: "Login Failed", message: message, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Overwrite", style: .default, handler: { _ in
+                        NSLog("Overwriting")
+                        print("overwrite")
+                        return
+                    }))
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { _ in
+                        NSLog("Overwriting Canceled.")
+                        print("not overwrite")
+                        return
+                    }))
+                    
+                    self.present(alert, animated: true, completion: nil)
+                    
+                }
+            } else {
+                print("new location")
+                
+                guard (errorString == "Could not find the student location.") else {
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    var informationPostingViewController: InformationPostingViewController
+                    informationPostingViewController = self.storyboard?.instantiateViewController(withIdentifier: "InformationPostingVC") as! InformationPostingViewController
+                    
+                    informationPostingViewController.studentLocation = result
+                    
+                    // self.navigationController?.pushViewController(informationPostingViewController, animated: true)
+                    self.present(informationPostingViewController, animated: true, completion: nil)
+                }
+            }
+        }
+        
+    }
 
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -69,72 +159,6 @@ class OTMTableViewController: UITableViewController {
         if let url = URL(string:location.mediaURL) {
             app.open(url)
         }
-        
     }
-    
-    @IBAction func logout(_ sender: UIBarButtonItem) {
-        let _ = OTMClient.sharedInstance().logOut { (success, sessionID, errorString) in
-            
-            if success {
-                OTMClient.sharedInstance().reset()
-                DispatchQueue.main.async {
-                    self.dismiss(animated: true)
-                }
-            } else {
-                DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "Logout Failed", message: errorString, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
-                        NSLog("Logout Failed")
-                    }))
-                    self.present(alert, animated: true, completion: nil)
-                }
-            }
-        }
-    }
-    
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
