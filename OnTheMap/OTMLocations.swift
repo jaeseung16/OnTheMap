@@ -14,6 +14,7 @@ class OTMLocations {
     
     // MARK: - Propertires
     var studentLocations: [StudentInformation]
+    var userLocation: StudentInformation?
     
     init() {
         studentLocations = [StudentInformation]()
@@ -21,7 +22,7 @@ class OTMLocations {
     
     // MARK: - Methods
     func load(completionHandlerForLoad: @escaping (_ success: Bool, _ error: String?) -> Void) {
-        let _ = OTMClient.sharedInstance().getStudentLocations { (success, results, errorString) in
+        let _ = OTMClient.sharedInstance.getStudentLocations { (success, results, errorString) in
             if success {
                 for result in results! {
                     let studentLocation = StudentInformation(dictionary: result)

@@ -11,29 +11,25 @@ import Foundation
 // MARK: - OTMClient: NSObject
 
 class OTMClient: NSObject {
-    // MARK: Properties
+    // MARK: Singleton
+    static let sharedInstance = OTMClient()
+    
+    // MARK: - Properties
     
     // shared session
     var session = URLSession.shared
     
     // authentication state
-    var requestToken: String? = nil
-    var sessionID : String? = nil
-    var userID : String? = nil
+    var requestToken: String?
+    var sessionID: String?
+    var userID: String?
+    var userFirstName: String?
+    var userLastName: String?
     
     // MARK: Initializers
     
     override init() {
         super.init()
-    }
-    
-    // MARK: Shared Instance
-    
-    class func sharedInstance() -> OTMClient {
-        struct Singleton {
-            static var sharedInstance = OTMClient()
-        }
-        return Singleton.sharedInstance
     }
     
     // MARK: Authentication methods
@@ -101,15 +97,14 @@ class OTMClient: NSObject {
                 return
             }
             
-            OTMClient.sharedInstance().userID = key
+            OTMClient.sharedInstance.userID = key
             
             guard let sessionID = parsedResult["session"] as? [String: AnyObject], let id = sessionID["id"] as? String else {
                 completionHandlerForSessionID(false, nil, "Could not get the session ID.")
                 return
             }
             
-            OTMClient.sharedInstance().sessionID = id
-            print(id)
+            OTMClient.sharedInstance.sessionID = id
             
             completionHandlerForSessionID(true, nil, nil)
             
@@ -207,7 +202,7 @@ class OTMClient: NSObject {
         component.host = OTMClient.OTMConstant.hostParse
         component.path = OTMClient.OTMConstant.pathParse
         component.queryItems = [URLQueryItem]()
-        component.queryItems!.append( URLQueryItem(name: "where", value: "{\"uniqueKey\":\"\(OTMClient.sharedInstance().userID!)\"}") )
+        component.queryItems!.append( URLQueryItem(name: "where", value: "{\"uniqueKey\":\"\(OTMClient.sharedInstance.userID!)\"}") )
         print("\(component.url!)")
         
         let request = NSMutableURLRequest(url: component.url!)
@@ -255,7 +250,7 @@ class OTMClient: NSObject {
         component.host = OTMClient.OTMConstant.hostParse
         component.path = OTMClient.OTMConstant.pathParse
         component.queryItems = [URLQueryItem]()
-        component.queryItems!.append( URLQueryItem(name: "where", value: "{\"uniqueKey\":\"\(OTMClient.sharedInstance().userID!)\"}") )
+        component.queryItems!.append( URLQueryItem(name: "where", value: "{\"uniqueKey\":\"\(OTMClient.sharedInstance.userID!)\"}") )
         print("\(component.url!)")
         */
         
@@ -393,8 +388,8 @@ class OTMClient: NSObject {
     }
     
     func reset() {
-        OTMClient.sharedInstance().sessionID = nil
-        OTMClient.sharedInstance().userID = nil
+        OTMClient.sharedInstance.sessionID = nil
+        OTMClient.sharedInstance.userID = nil
     }
     
     // MARK: - Getting a student location

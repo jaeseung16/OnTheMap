@@ -11,7 +11,10 @@ import UIKit
 class OTMTableViewController: UITableViewController {
     
     var locations = [StudentInformation]()
+    
     let otmLocations = OTMLocations.sharedInstance
+    let otmClient = OTMClient.sharedInstance
+    
     let reuseIdentifier = "OTMTableViewCell"
 
     override func viewDidLoad() {
@@ -37,10 +40,10 @@ class OTMTableViewController: UITableViewController {
     // MARK: - IBActions
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
-        let _ = OTMClient.sharedInstance().logOut { (success, sessionID, errorString) in
+        let _ = otmClient.logOut { (success, sessionID, errorString) in
             
             if success {
-                OTMClient.sharedInstance().reset()
+                self.otmClient.reset()
                 DispatchQueue.main.async {
                     self.dismiss(animated: true)
                 }
@@ -85,7 +88,7 @@ class OTMTableViewController: UITableViewController {
     
     @IBAction func addLocation(_ sender: UIBarButtonItem) {
         
-        let _ = OTMClient.sharedInstance().getAStudentLocation { (success, result, errorString) in
+        let _ = otmClient.getAStudentLocation { (success, result, errorString) in
             if success {
                 DispatchQueue.main.async {
                     let message = "You already posted a student location. Would you like to overwrite your location?"

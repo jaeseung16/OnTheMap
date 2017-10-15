@@ -14,6 +14,7 @@ class OTMMapViewController: UIViewController {
     var annotations = [MKPointAnnotation]()
     
     let otmLocations = OTMLocations.sharedInstance
+    let otmClient = OTMClient.sharedInstance
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -33,10 +34,10 @@ class OTMMapViewController: UIViewController {
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
         
-        let _ = OTMClient.sharedInstance().logOut { (success, sessionID, errorString) in
+        let _ = otmClient.logOut { (success, sessionID, errorString) in
             
             if success {
-                OTMClient.sharedInstance().reset()
+                self.otmClient.reset()
                 DispatchQueue.main.async {
                     self.dismiss(animated: true)
                 }
@@ -80,7 +81,7 @@ class OTMMapViewController: UIViewController {
     
     @IBAction func addLocation(_ sender: UIBarButtonItem) {
         
-        let _ = OTMClient.sharedInstance().getAStudentLocation { (success, result, errorString) in
+        let _ = otmClient.getAStudentLocation { (success, result, errorString) in
             if success {
                 DispatchQueue.main.async {
                     let message = "You already posted a student location. Would you like to overwrite your location?"
@@ -119,16 +120,6 @@ class OTMMapViewController: UIViewController {
         }
         
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     // MARK: - Methods
     

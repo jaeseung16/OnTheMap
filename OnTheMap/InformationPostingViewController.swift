@@ -20,6 +20,8 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var findButton: UIButton!
     @IBOutlet weak var submitButton: UIButton!
     
+    let otmClient = OTMClient.sharedInstance
+    
     var studentLocation: [String: AnyObject]!
     var location = CLLocation()
     var mapRect = MKMapRect()
@@ -30,6 +32,9 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         // Do any additional setup after loading the view.
         locationMapView.isHidden = true
         submitButton.isHidden = true
+        
+        locationTextField.isEnabled = true
+        websiteTextField.isEnabled = true
         
         activityIndicator.hidesWhenStopped = true;
         activityIndicator.center = view.center
@@ -60,6 +65,24 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func find(_ sender: UIButton) {
+        
+        guard let locationString = locationTextField.text, locationString != "" else {
+            postFailed("Location Not Found", "Must Enter a Location", "Dismiss")
+            return
+        }
+        
+        guard let websiteString = websiteTextField.text, websiteString != "" else {
+            postFailed("Location Not Found", "Must Enter a Website", "Dismiss")
+            return
+        }
+        
+        guard websiteString.lowercased().starts(with: "http://") || websiteString.lowercased().starts(with: "https://") else {
+            postFailed("Location Not Found", "Invalide Link. Include HTTP(S)://", "Dismiss")
+            return
+        }
+        
+        locationTextField.isEnabled = false
+        websiteTextField.isEnabled = false
         
         activityIndicator.startAnimating()
         
@@ -116,13 +139,16 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         parameters["latitude"] = "\(location.coordinate.latitude)"
         parameters["longitude"] = "\(location.coordinate.longitude)"
         */
-        let parameters = "{\"uniqueKey\": \"\(OTMClient.sharedInstance().userID!)\", \"firstName\": \"John\", \"lastName\": \"Doe\",\"mapString\": \"\(locationTextField.text!)\", \"mediaURL\": \"\(websiteTextField.text!)\",\"latitude\": \(location.coordinate.latitude), \"longitude\": \(location.coordinate.longitude)}"
+        let parameters = "{\"uniqueKey\": \"\(otmClient.userID!)\", \"firstName\": \"\(otmClient.userFirstName!)\", \"lastName\": \"\(otmClient.userLastName!)\",\"mapString\": \"\(locationTextField.text!)\", \"mediaURL\": \"\(websiteTextField.text!)\",\"latitude\": \(location.coordinate.latitude), \"longitude\": \(location.coordinate.longitude)}"
         
-        let _ = OTMClient.sharedInstance().postAStudentLocation(with: parameters) { (success, result, errorString) in
+        let _ = otmClient.postAStudentLocation(with: parameters) { (success, result, errorString) in
             if success {
                 print("success")
                 
                 self.dismiss(animated: true)
+                DispatchQueue.main.async {
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                }
                 
             } else {
                 print("fail: \(errorString!)")
@@ -139,32 +165,27 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    // MARK: - MKMapViewDelegate
-    /*
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        
-        let reuseId = "pin"
-        
-        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
-        
-        if pinView == nil {
-            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView!.canShowCallout = true
-            pinView!.pinTintColor = .red
-            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+    // Mark: - Methods
+    func postFailed(_ title: String, _ message: String, _ action: String) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: action, style: .default, handler: { _ in
+                NSLog("Post Failed")
+            }))
+            self.present(alert, animated: true, completion: nil)
+            
         }
-        else {
-            pinView!.annotation = annotation
-        }
-        
-        return pinView
     }
-    */
+    
 }
 
 extension InformationPostingViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.text = ""
     }
 }

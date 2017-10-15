@@ -8,23 +8,21 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
+class OTMLoginViewController: UIViewController {
 
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
     var studentsInformation = [StudentInformation]()
-    var publicUserData = [String: String]()
-    var onTheMapClient: OTMClient!
+
     let otmLocations = OTMLocations.sharedInstance
+    let otmClient = OTMClient.sharedInstance
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        onTheMapClient = OTMClient.sharedInstance()
         
         activityIndicator.hidesWhenStopped = true;
         activityIndicator.center = view.center
@@ -65,11 +63,11 @@ class LoginViewController: UIViewController {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         activityIndicator.startAnimating()
         
-        let _ = onTheMapClient.getSessionID(with: ["email": email, "password": password]) { (success, results, errorString) in
+        let _ = otmClient.getSessionID(with: ["email": email, "password": password]) { (success, results, errorString) in
             if success {
                 // Geting pulbic user data
                 
-                let _ = self.onTheMapClient.getPublicUserData(completionHandlerForUserData: { (success, userData, errorString) in
+                let _ = self.otmClient.getPublicUserData(completionHandlerForUserData: { (success, userData, errorString) in
                     
                     if success {
                         
@@ -78,16 +76,17 @@ class LoginViewController: UIViewController {
                             return
                         }
                         
-                        self.publicUserData["firstName"] = firstName
+                        self.otmClient.userFirstName = firstName
                         
                         guard let lastName = userData!["last_name"] as? String else {
                             self.loginFailed("Cannot get yout last name!")
                             return
                         }
+
+                        self.otmClient.userLastName = lastName
                         
-                        self.publicUserData["lastName"] = lastName
+                        print("\(self.otmClient.userFirstName!) \(self.otmClient.userLastName!) \(self.otmClient.userID!)")
                         
-                        print("\(String(describing: self.publicUserData["lastName"]))")
                         self.otmLocations.load(completionHandlerForLoad: { (success, errorString) in
                             if success {
                                 DispatchQueue.main.async {
@@ -100,26 +99,6 @@ class LoginViewController: UIViewController {
                                 return
                             }
                         })
-                        
-                        /*
-                        let _ = self.onTheMapClient.getStudentLocations(completionHandlerForStudentLocation: { (success, results, errorString) in
-                            
-                            if success {
-                                for result in results! {
-                                    let studentLocation = StudentInformation(dictionary: result)
-                                    self.studentsInformation.append(studentLocation)
-                                }
-                                print("\(self.studentsInformation.count)")
-                                DispatchQueue.main.async {
-                                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                                    self.activityIndicator.stopAnimating()
-                                    self.performSegue(withIdentifier: "LogedIn", sender: self)
-                                }
-                            } else {
-                                self.loginFailed(errorString!)
-                                return
-                            }
-                        }) */
                     } else {
                         self.loginFailed(errorString!)
                         return
@@ -155,7 +134,7 @@ class LoginViewController: UIViewController {
 
 // MARK: - UITextFieldDelegate
 
-extension LoginViewController: UITextFieldDelegate {
+extension OTMLoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true

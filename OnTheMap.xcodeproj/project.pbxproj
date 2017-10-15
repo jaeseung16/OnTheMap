@@ -14,7 +14,7 @@
 		0B9A9B531F885D1000605C0B /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9A9B521F885D1000605C0B /* StudentInformation.swift */; };
 		0BA9A0551F8EDA5D000432AB /* OTMConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9A0541F8EDA5D000432AB /* OTMConstants.swift */; };
 		0BA9DD1C1F858F5F00247CFF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9DD1B1F858F5F00247CFF /* AppDelegate.swift */; };
-		0BA9DD1E1F858F5F00247CFF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9DD1D1F858F5F00247CFF /* LoginViewController.swift */; };
+		0BA9DD1E1F858F5F00247CFF /* OTMLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9DD1D1F858F5F00247CFF /* OTMLoginViewController.swift */; };
 		0BA9DD211F858F5F00247CFF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BA9DD1F1F858F5F00247CFF /* Main.storyboard */; };
 		0BA9DD231F858F5F00247CFF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BA9DD221F858F5F00247CFF /* Assets.xcassets */; };
 		0BA9DD261F858F5F00247CFF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BA9DD241F858F5F00247CFF /* LaunchScreen.storyboard */; };
@@ -30,7 +30,7 @@
 		0BA9A0541F8EDA5D000432AB /* OTMConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTMConstants.swift; sourceTree = "<group>"; };
 		0BA9DD181F858F5F00247CFF /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA9DD1B1F858F5F00247CFF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0BA9DD1D1F858F5F00247CFF /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		0BA9DD1D1F858F5F00247CFF /* OTMLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTMLoginViewController.swift; sourceTree = "<group>"; };
 		0BA9DD201F858F5F00247CFF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0BA9DD221F858F5F00247CFF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0BA9DD251F858F5F00247CFF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -69,15 +69,15 @@
 			isa = PBXGroup;
 			children = (
 				0BA9DD1B1F858F5F00247CFF /* AppDelegate.swift */,
-				0BA9DD1D1F858F5F00247CFF /* LoginViewController.swift */,
 				0B9A9B521F885D1000605C0B /* StudentInformation.swift */,
 				0BA9DD1F1F858F5F00247CFF /* Main.storyboard */,
 				0B6A57A71F8C10900042EDCD /* InformationPostingViewController.swift */,
 				0B6E8A461F8D5D390060E1E4 /* OTMClient.swift */,
 				0BA9A0541F8EDA5D000432AB /* OTMConstants.swift */,
+				0B2D8D281F93AA5E00CA3509 /* OTMLocations.swift */,
+				0BA9DD1D1F858F5F00247CFF /* OTMLoginViewController.swift */,
 				0BFD06261F8979F400460564 /* OTMMapViewController.swift */,
 				0B682C951F8A537900A4779A /* OTMTableViewController.swift */,
-				0B2D8D281F93AA5E00CA3509 /* OTMLocations.swift */,
 				0BA9DD221F858F5F00247CFF /* Assets.xcassets */,
 				0BA9DD241F858F5F00247CFF /* LaunchScreen.storyboard */,
 				0BA9DD271F858F5F00247CFF /* Info.plist */,
@@ -162,7 +162,7 @@
 				0B682C961F8A537900A4779A /* OTMTableViewController.swift in Sources */,
 				0B6E8A471F8D5D390060E1E4 /* OTMClient.swift in Sources */,
 				0B6A57A81F8C10900042EDCD /* InformationPostingViewController.swift in Sources */,
-				0BA9DD1E1F858F5F00247CFF /* LoginViewController.swift in Sources */,
+				0BA9DD1E1F858F5F00247CFF /* OTMLoginViewController.swift in Sources */,
 				0BA9DD1C1F858F5F00247CFF /* AppDelegate.swift in Sources */,
 				0BA9A0551F8EDA5D000432AB /* OTMConstants.swift in Sources */,
 				0B2D8D291F93AA5E00CA3509 /* OTMLocations.swift in Sources */,
