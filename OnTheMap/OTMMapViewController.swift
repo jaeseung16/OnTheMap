@@ -33,9 +33,7 @@ class OTMMapViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
-        
         let _ = otmClient.logOut { (success, sessionID, errorString) in
-            
             if success {
                 self.otmClient.reset()
                 DispatchQueue.main.async {
@@ -76,49 +74,22 @@ class OTMMapViewController: UIViewController {
                 return
             }
         }
- 
     }
     
     @IBAction func addLocation(_ sender: UIBarButtonItem) {
-        
         let _ = otmClient.getAStudentLocation { (success, result, errorString) in
             if success {
                 DispatchQueue.main.async {
                     let message = "You already posted a student location. Would you like to overwrite your location?"
-                    let alert = UIAlertController(title: "Login Failed", message: message, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Overwrite", style: .default, handler: { _ in
-                        NSLog("Overwriting")
-                        print("overwrite")
-                        return
-                    }))
-                    alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { _ in
-                        NSLog("Overwriting Canceled.")
-                        print("not overwrite")
-                        return
-                    }))
-                    
-                    self.present(alert, animated: true, completion: nil)
-
+                    self.alertOverwrite(message)
                 }
             } else {
-                print("new location")
-                
                 guard (errorString == "Could not find the student location.") else {
                     return
                 }
-                
-                DispatchQueue.main.async {
-                    var informationPostingViewController: InformationPostingViewController
-                    informationPostingViewController = self.storyboard?.instantiateViewController(withIdentifier: "InformationPostingVC") as! InformationPostingViewController
-                    
-                    informationPostingViewController.studentLocation = result
-                    
-                    // self.navigationController?.pushViewController(informationPostingViewController, animated: true)
-                    self.present(informationPostingViewController, animated: true, completion: nil)
-                }
+                self.presentInformationPostingVC()
             }
         }
-        
     }
     
     // MARK: - Methods
@@ -138,6 +109,30 @@ class OTMMapViewController: UIViewController {
         }
         
         self.mapView.addAnnotations(annotations)
+    }
+    
+    func alertOverwrite(_ message: String) {
+        let alert = UIAlertController(title: "Warning", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Overwrite", style: .default, handler: { _ in
+            NSLog("Overwriting")
+            self.presentInformationPostingVC()
+            return
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { _ in
+            NSLog("Overwriting Canceled.")
+            return
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func presentInformationPostingVC() {
+        DispatchQueue.main.async {
+            var informationPostingViewController: InformationPostingViewController
+            informationPostingViewController = self.storyboard?.instantiateViewController(withIdentifier: "InformationPostingVC") as! InformationPostingViewController
+            
+            self.present(informationPostingViewController, animated: true, completion: nil)
+        }
     }
 }
 

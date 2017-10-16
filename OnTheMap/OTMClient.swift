@@ -22,9 +22,12 @@ class OTMClient: NSObject {
     // authentication state
     var requestToken: String?
     var sessionID: String?
+    
+    // for posting
     var userID: String?
     var userFirstName: String?
     var userLastName: String?
+    var objectID: String?
     
     // MARK: Initializers
     
@@ -220,6 +223,8 @@ class OTMClient: NSObject {
                 return
             }
             
+            print(NSString(data: data, encoding: String.Encoding.utf8.rawValue)!)
+            
             let parsedResult: [String: AnyObject]!
             
             do {
@@ -229,12 +234,14 @@ class OTMClient: NSObject {
                 return
             }
             
-            guard let result = parsedResult["results"] as? [String: AnyObject], let _ = result["uniqueKey"] as? String else {
+            guard let result = parsedResult["results"] as? [[String: AnyObject]], let _ = result[0]["uniqueKey"] as? String else {
                 completionHandlerForStudentLocation(false, nil, "Could not find the student location.")
                 return
             }
             
-            completionHandlerForStudentLocation(true, result, nil)
+            OTMClient.sharedInstance.objectID = result[0]["objectId"] as? String
+            
+            completionHandlerForStudentLocation(true, result[0], nil)
             
         }
         
@@ -243,34 +250,55 @@ class OTMClient: NSObject {
     
     // MARK: postAStudentLocation
     
-    func postAStudentLocation(with parameters: String, completionHandlerForPostLocation: @escaping (_ sucess: Bool, _ result: [String: AnyObject]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
-        /*
+    func postAStudentLocation(with parameters: [String: String], completionHandlerForPostLocation: @escaping (_ sucess: Bool, _ errorString: String?) -> Void) -> URLSessionDataTask {
+        
         var component = URLComponents()
         component.scheme = OTMClient.OTMConstant.scheme
         component.host = OTMClient.OTMConstant.hostParse
-        component.path = OTMClient.OTMConstant.pathParse
-        component.queryItems = [URLQueryItem]()
-        component.queryItems!.append( URLQueryItem(name: "where", value: "{\"uniqueKey\":\"\(OTMClient.sharedInstance.userID!)\"}") )
+        
+        print("\(String(describing: OTMClient.sharedInstance.objectID))")
+        
+        var httpMethod: String
+        
+        if let objectID = OTMClient.sharedInstance.objectID {
+            component.path = OTMClient.OTMConstant.pathParse + "/\(objectID)"
+            httpMethod = "PUT"
+        } else {
+            component.path = OTMClient.OTMConstant.pathParse
+            httpMethod = "POST"
+        }
+        /*
+        let request = NSMutableURLRequest()
+        
+        if let objectID = OTMClient.sharedInstance.objectID {
+            print("overwriting...")
+            print("https://parse.udacity.com/parse/classes/StudentLocation/\(objectID)")
+            request.url = URL(string: "https://parse.udacity.com/parse/classes/StudentLocation/\(objectID)")!
+            request.httpMethod = "PUT"
+        } else {
+            print("submitting...")
+            print("https://parse.udacity.com/parse/classes/StudentLocation")
+            request.url = URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!
+            request.httpMethod = "POST"
+        }*/
         print("\(component.url!)")
-        */
+        print(httpMethod)
         
-        print("submitting...")
-        
-        let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
-        request.httpMethod = "POST"
+        let request = NSMutableURLRequest(url: component.url!)
+        request.httpMethod = httpMethod
         request.addValue(OTMClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue(OTMClient.restAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = parameters.data(using: String.Encoding.utf8)
+        request.httpBody = httpBodyForPostAndPut(with: parameters).data(using: String.Encoding.utf8)
         
         let task = dataTask(with: request as URLRequest) { (data, error) in
             guard (error == nil) else {
-                completionHandlerForPostLocation(false, nil, "Cannot download the student location.")
+                completionHandlerForPostLocation(false, "Cannot download the student location.")
                 return
             }
             
             guard let data = data else {
-                completionHandlerForPostLocation(false, nil, "No data was returned by the request!")
+                completionHandlerForPostLocation(false, "No data was returned by the request!")
                 return
             }
             
@@ -279,18 +307,18 @@ class OTMClient: NSObject {
             do {
                 parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: AnyObject]
             } catch {
-                completionHandlerForPostLocation(false, nil, "Could not parse the data as JSON: '\(String(describing: data))'")
+                completionHandlerForPostLocation(false, "Could not parse the data as JSON: '\(String(describing: data))'")
                 return
             }
             
             print("\(parsedResult)")
             
-            guard let result = parsedResult else {
-                completionHandlerForPostLocation(false, nil, "Could not find the student location.")
+            guard (parsedResult["updatedAt"] as? String) != nil else {
+                completionHandlerForPostLocation(false, "Could not find the student location.")
                 return
             }
             
-            completionHandlerForPostLocation(true, result, nil)
+            completionHandlerForPostLocation(true, nil)
             
         }
         
@@ -392,6 +420,23 @@ class OTMClient: NSObject {
         OTMClient.sharedInstance.userID = nil
     }
     
-    // MARK: - Getting a student location
+    func httpBodyForPostAndPut(with parameters: [String: String]) -> String {
+        var wholeParameters = parameters
+        wholeParameters["uniqueKey"] = "\"\(OTMClient.sharedInstance.userID!)\""
+        wholeParameters["firstName"] = "\"\(OTMClient.sharedInstance.userFirstName!)\""
+        wholeParameters["lastName"] = "\"\(OTMClient.sharedInstance.userLastName!)\""
+        
+        var stringForHttpBody = "{"
+        
+        for parameter in wholeParameters {
+            stringForHttpBody.append("\"\(parameter.key)\": \(parameter.value), ")
+        }
+        
+        stringForHttpBody.removeLast(2)
+        stringForHttpBody.append("}")
+
+        print(stringForHttpBody)
+        return stringForHttpBody
+    }
     
 }

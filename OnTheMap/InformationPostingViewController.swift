@@ -22,7 +22,6 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     
     let otmClient = OTMClient.sharedInstance
     
-    var studentLocation: [String: AnyObject]!
     var location = CLLocation()
     var mapRect = MKMapRect()
     
@@ -129,37 +128,21 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     @IBAction func submit(_ sender: UIButton) {
         
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        /*
-        var parameters = [String: String]()
-        parameters["uniqueKey"] = OTMClient.sharedInstance().userID
-        // parameters["firstName"]
-        // parameters["lastName"]
-        parameters["mapString"] = locationTextField.text!
-        parameters["mediaURL"] = websiteTextField.text!
-        parameters["latitude"] = "\(location.coordinate.latitude)"
-        parameters["longitude"] = "\(location.coordinate.longitude)"
-        */
-        let parameters = "{\"uniqueKey\": \"\(otmClient.userID!)\", \"firstName\": \"\(otmClient.userFirstName!)\", \"lastName\": \"\(otmClient.userLastName!)\",\"mapString\": \"\(locationTextField.text!)\", \"mediaURL\": \"\(websiteTextField.text!)\",\"latitude\": \(location.coordinate.latitude), \"longitude\": \(location.coordinate.longitude)}"
         
-        let _ = otmClient.postAStudentLocation(with: parameters) { (success, result, errorString) in
+        let parameters = ["mapString": "\"\(locationTextField.text!)\"", "mediaURL": "\"\(websiteTextField.text!)\"", "latitude": "\(location.coordinate.latitude)", "longitude": "\(location.coordinate.longitude)"]
+        
+        print(parameters)
+        let _ = otmClient.postAStudentLocation(with: parameters) { (success, errorString) in
             if success {
-                print("success")
-                
-                self.dismiss(animated: true)
                 DispatchQueue.main.async {
                     UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 }
-                
+                self.dismiss(animated: true)
             } else {
-                print("fail: \(errorString!)")
                 DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "Post Failed", message: "Post Failed", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
-                        NSLog("Login Failed")
-                    }))
-                    self.present(alert, animated: true, completion: nil)
-                    
                     UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    print(errorString!)
+                    self.postFailed("Post Failed", "Could not post the location.", "Dismiss")
                 }
             }
         }
