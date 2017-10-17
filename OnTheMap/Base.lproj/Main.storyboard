@@ -4,7 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -260,9 +260,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lON-SZ-Wt7">
+                            <navigationBar contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lON-SZ-Wt7">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Add Location" id="rA0-8z-xO6">
                                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="D8O-X8-a1m">
@@ -273,11 +272,8 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon_World" translatesAutoresizingMaskIntoConstraints="NO" id="E5s-U5-QWI">
-                                <rect key="frame" x="161" y="85" width="52" height="67"/>
-                            </imageView>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter a Location" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lj3-Um-4TI">
-                                <rect key="frame" x="16" y="160" width="343" height="30"/>
+                            <textField opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter a Location" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lj3-Um-4TI">
+                                <rect key="frame" x="16" y="104" width="343" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -285,8 +281,8 @@
                                     <outlet property="delegate" destination="0Y0-SD-4V5" id="3SW-qL-SjI"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter a Website" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZnZ-4R-nhC">
-                                <rect key="frame" x="16" y="198" width="343" height="30"/>
+                            <textField opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter a Website" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZnZ-4R-nhC">
+                                <rect key="frame" x="16" y="186" width="343" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -294,25 +290,30 @@
                                     <outlet property="delegate" destination="0Y0-SD-4V5" id="4vN-2F-YWC"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B9a-8X-QKv">
-                                <rect key="frame" x="16" y="236" width="343" height="30"/>
-                                <state key="normal" title="Find on the Map"/>
-                                <connections>
-                                    <action selector="find:" destination="0Y0-SD-4V5" eventType="touchUpInside" id="rtG-5S-obe"/>
-                                </connections>
-                            </button>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ibR-uM-Ex1">
                                 <rect key="frame" x="16" y="274" width="343" height="335"/>
                                 <connections>
                                     <outlet property="delegate" destination="0Y0-SD-4V5" id="dRb-x6-KuG"/>
                                 </connections>
                             </mapView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="oFS-O1-YAV">
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="oFS-O1-YAV">
                                 <rect key="frame" x="177" y="439" width="20" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GNf-OK-E5v">
-                                <rect key="frame" x="16" y="617" width="343" height="30"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Where are you now?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LBE-ny-Qeb">
+                                <rect key="frame" x="16" y="75" width="343" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Please add your URL below." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LUM-D3-cLY">
+                                <rect key="frame" x="16" y="157" width="343" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GNf-OK-E5v">
+                                <rect key="frame" x="16" y="224" width="343" height="30"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Submit"/>
                                 <connections>
@@ -323,30 +324,28 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="1Pp-mz-vxQ" firstAttribute="bottom" secondItem="GNf-OK-E5v" secondAttribute="bottom" constant="20" id="3ep-mP-RqJ"/>
-                            <constraint firstItem="lj3-Um-4TI" firstAttribute="top" secondItem="E5s-U5-QWI" secondAttribute="bottom" constant="8" id="5uR-ca-byB"/>
                             <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="lj3-Um-4TI" secondAttribute="trailing" constant="16" id="6Wl-xF-LBI"/>
                             <constraint firstItem="1Pp-mz-vxQ" firstAttribute="bottom" secondItem="ibR-uM-Ex1" secondAttribute="bottom" constant="58" id="A4p-gp-yg2"/>
-                            <constraint firstItem="B9a-8X-QKv" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="Ag9-dY-d9r"/>
-                            <constraint firstItem="E5s-U5-QWI" firstAttribute="centerX" secondItem="1Pp-mz-vxQ" secondAttribute="centerX" id="RDg-UR-goO"/>
+                            <constraint firstItem="ZnZ-4R-nhC" firstAttribute="leading" secondItem="lj3-Um-4TI" secondAttribute="leading" id="BwD-rz-cGt"/>
+                            <constraint firstItem="ZnZ-4R-nhC" firstAttribute="leading" secondItem="LBE-ny-Qeb" secondAttribute="leading" id="CZR-p0-wsd"/>
+                            <constraint firstItem="ZnZ-4R-nhC" firstAttribute="top" secondItem="LBE-ny-Qeb" secondAttribute="bottom" constant="46" id="P1X-6x-orQ"/>
                             <constraint firstItem="ibR-uM-Ex1" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="WAx-ED-JOw"/>
-                            <constraint firstItem="B9a-8X-QKv" firstAttribute="top" secondItem="ZnZ-4R-nhC" secondAttribute="bottom" constant="8" id="YQf-hl-rrl"/>
                             <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="GNf-OK-E5v" secondAttribute="trailing" constant="16" id="Z9u-Dx-fat"/>
                             <constraint firstItem="ibR-uM-Ex1" firstAttribute="top" secondItem="1Pp-mz-vxQ" secondAttribute="top" constant="254" id="aTq-R0-oFm"/>
-                            <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="ZnZ-4R-nhC" secondAttribute="trailing" constant="16" id="hAt-XV-K6E"/>
-                            <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="B9a-8X-QKv" secondAttribute="trailing" constant="16" id="hFP-NP-60G"/>
                             <constraint firstItem="GNf-OK-E5v" firstAttribute="top" secondItem="ibR-uM-Ex1" secondAttribute="bottom" constant="8" id="jni-sY-7mo"/>
-                            <constraint firstItem="ZnZ-4R-nhC" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="kI4-od-vOX"/>
+                            <constraint firstItem="ZnZ-4R-nhC" firstAttribute="trailing" secondItem="lj3-Um-4TI" secondAttribute="trailing" id="k53-hu-cnZ"/>
                             <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="ibR-uM-Ex1" secondAttribute="trailing" constant="16" id="oKF-DP-1YR"/>
+                            <constraint firstItem="ZnZ-4R-nhC" firstAttribute="top" secondItem="Ym3-Ja-8fD" secondAttribute="top" constant="141" id="oj6-ZI-dHb"/>
                             <constraint firstItem="GNf-OK-E5v" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="qcC-w8-nfQ"/>
-                            <constraint firstItem="ZnZ-4R-nhC" firstAttribute="top" secondItem="lj3-Um-4TI" secondAttribute="bottom" constant="8" id="rgI-NU-Ju2"/>
-                            <constraint firstItem="ibR-uM-Ex1" firstAttribute="top" secondItem="B9a-8X-QKv" secondAttribute="bottom" constant="8" id="s3h-TB-4U3"/>
+                            <constraint firstItem="ZnZ-4R-nhC" firstAttribute="trailing" secondItem="LBE-ny-Qeb" secondAttribute="trailing" id="v3n-U6-YIE"/>
                             <constraint firstItem="lj3-Um-4TI" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="vAd-7r-iEa"/>
+                            <constraint firstItem="ZnZ-4R-nhC" firstAttribute="centerX" secondItem="lON-SZ-Wt7" secondAttribute="centerX" id="vT1-pE-Qaf"/>
+                            <constraint firstItem="ZnZ-4R-nhC" firstAttribute="centerX" secondItem="oFS-O1-YAV" secondAttribute="centerX" id="w8B-fy-sjQ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="1Pp-mz-vxQ"/>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="oFS-O1-YAV" id="PFl-yS-mcC"/>
-                        <outlet property="findButton" destination="B9a-8X-QKv" id="zs8-TV-kgq"/>
                         <outlet property="locationMapView" destination="ibR-uM-Ex1" id="Gy2-hc-nos"/>
                         <outlet property="locationTextField" destination="lj3-Um-4TI" id="yzt-Sb-Nu7"/>
                         <outlet property="submitButton" destination="GNf-OK-E5v" id="Aly-f6-Vib"/>
@@ -366,7 +365,6 @@
         <image name="Icon_Mapview_Selected" width="75" height="50"/>
         <image name="Icon_Pin" width="24" height="24"/>
         <image name="Icon_Refresh" width="24" height="24"/>
-        <image name="Icon_World" width="52" height="67"/>
         <image name="Logo-U" width="62" height="62"/>
     </resources>
 </document>

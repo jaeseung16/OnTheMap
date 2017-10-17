@@ -64,22 +64,23 @@ class OTMTableViewController: UITableViewController {
         self.locations = []
         
         otmLocations.refresh { (success, errorString) in
+            DispatchQueue.main.async {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                //self.activityIndicator.stopAnimating()
+            }
+            
             if success {
                 DispatchQueue.main.async {
                     for location in self.otmLocations.studentLocations {
                         self.locations.append(location)
                     }
                     print("\(self.otmLocations.studentLocations.count)")
-                    
-                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+
                     self.tableView.reloadData()
-                    //self.activityIndicator.stopAnimating()
-                    //self.performSegue(withIdentifier: "LogedIn", sender: self)
                 }
             } else {
                 //self.loginFailed(errorString!)
                 print("Refresh failed")
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 return
             }
         }
