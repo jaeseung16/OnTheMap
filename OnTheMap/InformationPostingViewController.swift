@@ -24,21 +24,23 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     
     // MARK: Variables
     let otmClient = OTMClient.sharedInstance
-    var location = CLLocation()
-    var mapRect = MKMapRect()
+    
+    // MARK: - Overridden Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
         activityIndicator.hidesWhenStopped = true;
         activityIndicator.center = view.center
+        
+        locationMapView.isHidden = true
         
         // Remove these two lines later
         locationTextField.text = "New York"
         websiteTextField.text = "https://www.google.com"
     }
+    
+    // MARK: - IBActions
 
     @IBAction func cancel(_ sender: UIBarButtonItem) {
         self.dismiss(animated: true)
@@ -72,20 +74,19 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
                     return
                 }
                 
-                print("latitude: \(location.coordinate.latitude), longitude: \(location.coordinate.longitude)")
-                
                 let parameters = ["mapString": "\"\(locationString)\"", "mediaURL": "\"\(websiteString)\"", "latitude": "\(location.coordinate.latitude)", "longitude": "\(location.coordinate.longitude)"]
                 
+                DispatchQueue.main.async {
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = true
+                }
+                
                 let _ = self.otmClient.postAStudentLocation(with: parameters) { (success, errorString) in
-                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    DispatchQueue.main.async {
+                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    }
                     
-                    if success {
-                        // self.dismiss(animated: true)
-                    } else {
-                        DispatchQueue.main.async {
-                            print(errorString!)
+                    if !success {
                             self.postFailed("Post Failed", "Could not post the location.", "Dismiss")
-                        }
                     }
                 }
                 
@@ -96,12 +97,12 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         }
         
     }
-    
-    // Mark: - Methods
-    func geoCoding(_ location: String, completionHandlerForGeoCoding: @escaping (_ success: Bool, _ location: CLLocation?, _ error: NSError?) -> Void) {
+
+    // MARK: - Methods
+    func geoCoding(_ locationString: String, completionHandlerForGeoCoding: @escaping (_ success: Bool, _ location: CLLocation?, _ error: NSError?) -> Void) {
         let geoCoder = CLGeocoder()
         
-        geoCoder.geocodeAddressString(location) { (placeMark, error) in
+        geoCoder.geocodeAddressString(locationString) { (placeMark, error) in
             func sendError(_ error: String) {
                 let userInfo = [NSLocalizedDescriptionKey: error]
                 completionHandlerForGeoCoding(false, nil, NSError(domain: "geoCoding", code: 1, userInfo: userInfo))
@@ -122,8 +123,10 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
             annotation.coordinate = location.coordinate
             
             DispatchQueue.main.async {
-                self.locationMapView.setCenter(self.location.coordinate, animated: false)
+                self.locationMapView.isHidden = false
+                self.locationMapView.setCenter(location.coordinate, animated: false)
                 self.locationMapView.showAnnotations([annotation], animated: true)
+                self.locationMapView.isHidden = false
             }
             
             completionHandlerForGeoCoding(true, location, nil)
