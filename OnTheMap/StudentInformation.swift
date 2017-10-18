@@ -17,6 +17,7 @@ struct StudentInformation {
     var mediaURL: String
     var latitude: Double
     var longitude: Double
+    var updatedAt: String
     
     enum Property: String {
         case objectId, uniqueKey, firstName, lastName, mapString, mediaURL, latitude, longitude
@@ -72,5 +73,10 @@ struct StudentInformation {
             self.longitude  = 0.0
         }
 
+        if let updatedAt = dictionary["updatedAt"] as? String {
+            self.updatedAt = updatedAt
+        } else {
+            self.updatedAt = ""
+        }
     }
 }

@@ -28,7 +28,8 @@ class OTMLocations {
                     let studentLocation = StudentInformation(dictionary: result)
                     self.studentLocations.append(studentLocation)
                 }
-                print("\(self.studentLocations.count)")
+                self.studentLocations.sort { $0.updatedAt > $1.updatedAt }
+                print("\(self.studentLocations[0].updatedAt) - \(self.studentLocations[1].updatedAt)")
                 completionHandlerForLoad(true, nil)
             } else {
                 print("\(self.studentLocations.count)")

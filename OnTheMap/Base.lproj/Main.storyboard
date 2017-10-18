@@ -148,7 +148,7 @@
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem image="Icon_AddPin" id="JcR-Zf-y45">
+                            <barButtonItem image="Icon_Pin" id="JcR-Zf-y45">
                                 <connections>
                                     <action selector="addLocation:" destination="7JK-tg-MbD" id="ckO-Jq-dbl"/>
                                 </connections>
@@ -232,7 +232,7 @@
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem image="Icon_AddPin" id="c6T-ow-Xnq">
+                            <barButtonItem image="Icon_Pin" id="c6T-ow-Xnq">
                                 <connections>
                                     <action selector="addLocation:" destination="91k-8X-64N" id="KlF-rK-tXe"/>
                                 </connections>
@@ -367,7 +367,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Icon_AddPin" width="24" height="24"/>
         <image name="Icon_Listview_Deselected" width="75" height="50"/>
         <image name="Icon_Listview_Selected" width="75" height="50"/>
         <image name="Icon_Mapview_Deselected" width="75" height="50"/>
