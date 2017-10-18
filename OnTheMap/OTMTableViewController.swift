@@ -34,10 +34,9 @@ class OTMTableViewController: UITableViewController {
     // MARK: - IBActions
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
-        let _ = otmClient.logOut { (success, sessionID, errorString) in
+        let _ = otmClient.logOut { (success, errorString) in
             
             if success {
-                self.otmClient.reset()
                 DispatchQueue.main.async {
                     self.dismiss(animated: true)
                 }

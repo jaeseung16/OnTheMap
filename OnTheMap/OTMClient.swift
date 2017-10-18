@@ -50,7 +50,7 @@ class OTMClient: NSObject {
         let email = parameters["email"]
         let password = parameters["password"]
         
-        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
+        let request = NSMutableURLRequest(url: URL(string: OTMClient.SessionURL)!)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -325,11 +325,82 @@ class OTMClient: NSObject {
         return task
     }
     
+    // MARK: - logOut
+    
+    func logOut(completionHandlerForLogOut: @escaping (_ success: Bool, _ errorString: String?) -> Void) -> URLSessionDataTask {
+        
+        let request = NSMutableURLRequest(url: URL(string: OTMClient.SessionURL)!)
+        request.httpMethod = "DELETE"
+        var xsrfCookie: HTTPCookie? = nil
+        let sharedCookieStorage = HTTPCookieStorage.shared
+        for cookie in sharedCookieStorage.cookies! {
+            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+        }
+        if let xsrfCookie = xsrfCookie {
+            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
+        
+        let task = dataTask(with: request as URLRequest) { (data, error) in
+            guard (error == nil) else {
+                completionHandlerForLogOut(false, "Logout failed. Try again.")
+                return
+            }
+            
+            let range = Range(5..<data!.count)
+            let newData = data!.subdata(in: range)
+            
+            let parsedResult: [String: AnyObject]!
+            do {
+                parsedResult = try JSONSerialization.jsonObject(with: newData, options: .allowFragments) as! [String: AnyObject]
+            } catch {
+                completionHandlerForLogOut(false, "The data returned has a problem. Try again.")
+                return
+            }
+            
+            guard let session = parsedResult["session"] as? [String: AnyObject], (session["id"] as? String) != nil else {
+                completionHandlerForLogOut(false, "The data returned has a problem. Try again.")
+                return
+            }
+            
+            self.reset()
+            completionHandlerForLogOut(true, nil)
+        }
+
+        return task
+    }
+    
+    func reset() {
+        OTMClient.sharedInstance.requestToken = nil
+        OTMClient.sharedInstance.sessionID = nil
+        OTMClient.sharedInstance.userID = nil
+        OTMClient.sharedInstance.userFirstName = nil
+        OTMClient.sharedInstance.userLastName = nil
+        OTMClient.sharedInstance.objectID = nil
+    }
+    
+    // MARK:
+    func httpBodyForPostAndPut(with parameters: [String: String]) -> String {
+        var extendedParameters = parameters
+        extendedParameters["uniqueKey"] = "\"\(OTMClient.sharedInstance.userID!)\""
+        extendedParameters["firstName"] = "\"\(OTMClient.sharedInstance.userFirstName!)\""
+        extendedParameters["lastName"] = "\"\(OTMClient.sharedInstance.userLastName!)\""
+        
+        var stringForHttpBody = "{"
+        
+        for parameter in extendedParameters {
+            stringForHttpBody.append("\"\(parameter.key)\": \(parameter.value), ")
+        }
+        
+        stringForHttpBody.removeLast(2)
+        stringForHttpBody.append("}")
+
+        return stringForHttpBody
+    }
+    
     // MARK: - dataTask
     func dataTask(with request: URLRequest, completionHandlerForDataTask: @escaping (_ result: Data?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
-            
             func sendError(_ error: String) {
                 let userInfo = [NSLocalizedDescriptionKey: error]
                 completionHandlerForDataTask(nil, NSError(domain: "dataTask", code: 1, userInfo: userInfo))
@@ -352,91 +423,9 @@ class OTMClient: NSObject {
             }
             
             completionHandlerForDataTask(data, nil)
-            
         }
-     
+        
         task.resume()
-        
-        return task
-        
-    }
-    
-    // MARK: - logOut
-    
-    func logOut(completionHandlerForLogOut: @escaping (_ success: Bool, _ sessionID: String?, _ errorString: String?) -> Void) -> URLSessionDataTask {
-        
-        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
-        request.httpMethod = "DELETE"
-        var xsrfCookie: HTTPCookie? = nil
-        let sharedCookieStorage = HTTPCookieStorage.shared
-        for cookie in sharedCookieStorage.cookies! {
-            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
-        }
-        if let xsrfCookie = xsrfCookie {
-            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
-        }
-        
-        let task = dataTask(with: request as URLRequest) { (data, error) in
-            guard (error == nil) else {
-                completionHandlerForLogOut(false, nil, "Logout failed. Try again.")
-                return
-            }
-            
-            guard let data = data else {
-                completionHandlerForLogOut(false, nil, "Logout failed. Try again.")
-                return
-            }
-            
-            let range = Range(5..<data.count)
-            let newData = data.subdata(in: range)
-            
-            let parsedResult: [String: AnyObject]!
-            
-            do {
-                parsedResult = try JSONSerialization.jsonObject(with: newData, options: .allowFragments) as! [String: AnyObject]
-            } catch {
-                completionHandlerForLogOut(false, nil, "The data returned has a problem. Try again.")
-                return
-            }
-            
-            guard let session = parsedResult["session"] as? [String: AnyObject] else {
-                completionHandlerForLogOut(false, nil, "The data returned has a problem. Try again.")
-                return
-            }
-            
-            guard let id = session["id"] as? String else {
-                completionHandlerForLogOut(false, nil, "The data returned has a problem. Try again.")
-                return
-            }
-            
-            completionHandlerForLogOut(true, id, nil)
-        }
-
         return task
     }
-    
-    func reset() {
-        OTMClient.sharedInstance.sessionID = nil
-        OTMClient.sharedInstance.userID = nil
-    }
-    
-    func httpBodyForPostAndPut(with parameters: [String: String]) -> String {
-        var wholeParameters = parameters
-        wholeParameters["uniqueKey"] = "\"\(OTMClient.sharedInstance.userID!)\""
-        wholeParameters["firstName"] = "\"\(OTMClient.sharedInstance.userFirstName!)\""
-        wholeParameters["lastName"] = "\"\(OTMClient.sharedInstance.userLastName!)\""
-        
-        var stringForHttpBody = "{"
-        
-        for parameter in wholeParameters {
-            stringForHttpBody.append("\"\(parameter.key)\": \(parameter.value), ")
-        }
-        
-        stringForHttpBody.removeLast(2)
-        stringForHttpBody.append("}")
-
-        print(stringForHttpBody)
-        return stringForHttpBody
-    }
-    
 }

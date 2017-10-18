@@ -33,9 +33,8 @@ class OTMMapViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
-        let _ = otmClient.logOut { (success, sessionID, errorString) in
+        let _ = otmClient.logOut { (success, errorString) in
             if success {
-                self.otmClient.reset()
                 DispatchQueue.main.async {
                     self.dismiss(animated: true)
                 }
@@ -129,8 +128,8 @@ class OTMMapViewController: UIViewController {
     func presentInformationPostingVC() {
         DispatchQueue.main.async {
             var informationPostingViewController: InformationPostingViewController
-            informationPostingViewController = self.storyboard?.instantiateViewController(withIdentifier: "InformationPostingVC") as! InformationPostingViewController
             
+            informationPostingViewController = self.storyboard?.instantiateViewController(withIdentifier: "InformationPostingVC") as! InformationPostingViewController
             self.present(informationPostingViewController, animated: true, completion: nil)
         }
     }
@@ -141,7 +140,6 @@ extension OTMMapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
-        
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         
         if pinView == nil {
@@ -163,7 +161,6 @@ extension OTMMapViewController: MKMapViewDelegate {
             if let toOpen = view.annotation?.subtitle! {
                 app.open(URL(string: toOpen)!)
             }
-            
         }
     }
 }
