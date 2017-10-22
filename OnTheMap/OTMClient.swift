@@ -11,160 +11,149 @@ import Foundation
 // MARK: - OTMClient: NSObject
 
 class OTMClient: NSObject {
-    // MARK: Singleton
+    // MARK: Properties
+    // Singleton
     static let sharedInstance = OTMClient()
-    
-    // MARK: - Properties
-    
-    // shared session
+
     var session = URLSession.shared
     
-    // authentication state
+    // For authentication state
     var requestToken: String?
     var sessionID: String?
     
-    // for posting
+    // For posting
     var userID: String?
     var userFirstName: String?
     var userLastName: String?
     var objectID: String?
     
-    // MARK: Initializers
-    
+    // MARK: - Methods
     override init() {
         super.init()
     }
     
-    // MARK: Authentication methods
-    /*
-    func authenticate(completionHandlerForAuth: @escaping (_ success: Bool, _ errorString: String?) -> Void) {
-        getSessionID() {
-            getStudentLocations()
+    // MARK: - Authentication methods
+    func logIn(with parameters: [String: String], completionHandlerForAuth: @escaping (_ success: Bool, _ errorString: String?) -> Void) {
+        let _ = getSessionID(with: parameters) { (success, errorString) in
+            if success {
+                let _ = self.getPublicUserData() { (success, errorString) in
+                    if success {
+                        completionHandlerForAuth(true, nil)
+                    } else {
+                        completionHandlerForAuth(false, errorString)
+                    }
+                }
+            } else {
+                completionHandlerForAuth(false, errorString)
+            }
         }
-    }*/
-    
-    // MARK: getSessionID
-    
-    func getSessionID(with parameters: [String: String], completionHandlerForSessionID: @escaping (_ success: Bool, _ parsedData: [[String: AnyObject]]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
-        
-        let email = parameters["email"]
-        let password = parameters["password"]
-        
-        let request = NSMutableURLRequest(url: URL(string: OTMClient.SessionURL)!)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = "{\"udacity\": {\"username\": \"\(email!)\", \"password\": \"\(password!)\"}}".data(using: String.Encoding.utf8)
+    }
+
+    func getSessionID(with parameters: [String: String], completionHandlerForSessionID: @escaping (_ success: Bool, _ errorString: String?) -> Void) -> URLSessionDataTask {
+        let request = requestForSessionID(with: parameters)
         
         let task = dataTask(with: request as URLRequest) { (data, error) in
             guard (error == nil) else {
                 guard let errorString = error!.userInfo[NSLocalizedDescriptionKey] as? String else {
-                    completionHandlerForSessionID(false, nil, "There was an unknown error with your request.")
+                    completionHandlerForSessionID(false, "There was an unknown error with your request.")
                     return
                 }
                 
                 if errorString.starts(with: "There was an error with your request: ") {
-                    completionHandlerForSessionID(false, nil, "The request timed out.")
+                    completionHandlerForSessionID(false, "The request timed out.")
                 } else if errorString == "Your request returned a status code other than 2xx!" {
-                    completionHandlerForSessionID(false, nil, "Account not found. Wrong email or password.")
+                    completionHandlerForSessionID(false, "Account not found. Wrong email or password.")
                 } else {
-                    completionHandlerForSessionID(false, nil, errorString)
+                    completionHandlerForSessionID(false, errorString)
                 }
                 return
             }
            
             guard let data = data else {
-                completionHandlerForSessionID(false, nil, "No data was returned by the request!")
+                completionHandlerForSessionID(false, "No data was returned by the request!")
                 return
             }
             let range = Range(5..<data.count)
             let newData = data.subdata(in: range)
             // print(NSString(data: newData, encoding: String.Encoding.utf8.rawValue)!)
             
-            let parsedResult: [String: AnyObject]!
-            
-            do {
-                parsedResult = try JSONSerialization.jsonObject(with: newData, options: .allowFragments) as! [String: AnyObject]
-            } catch {
-                completionHandlerForSessionID(false, nil, "Could not parse the data as JSON: '\(data)'")
-                return
-            }
-            
-            if let _ = parsedResult["status"] as? Int {
-                // self.loginFailed("Incorrect email or password")
+            guard let parsedResult = self.parseJSON(newData) else {
+                completionHandlerForSessionID(false, "Could not parse the data as JSON: '\(newData)'")
                 return
             }
             
             guard let account = parsedResult["account"] as? [String: AnyObject], let key = account["key"] as? String else {
-                completionHandlerForSessionID(false, nil, "Could not parse the data as JSON: '\(data)'")
+                completionHandlerForSessionID(false, "Could not get the user ID.")
                 return
             }
             
-            OTMClient.sharedInstance.userID = key
+            self.userID = key
             
             guard let sessionID = parsedResult["session"] as? [String: AnyObject], let id = sessionID["id"] as? String else {
-                completionHandlerForSessionID(false, nil, "Could not get the session ID.")
+                completionHandlerForSessionID(false, "Could not get the session ID.")
                 return
             }
             
-            OTMClient.sharedInstance.sessionID = id
+            self.sessionID = id
             
-            completionHandlerForSessionID(true, nil, nil)
+            completionHandlerForSessionID(true, nil)
             
         }
             
         return task
     }
     
-    // MARK: getPublicUserData
-    
-    func getPublicUserData(completionHandlerForUserData: @escaping (_ success: Bool, _ userData: [String: AnyObject]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
-        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/users/\(self.userID!)")!)
+    func getPublicUserData(completionHandlerForUserData: @escaping (_ success: Bool, _ errorString: String?) -> Void) -> URLSessionDataTask {
+        let request = NSMutableURLRequest(url: URL(string: OTMClient.UserDataURL + "\(self.userID!)")!)
         
         let task = dataTask(with: request as URLRequest) { (data, error) in
             guard (error == nil) else {
-                completionHandlerForUserData(false, nil, "Cannot download public user data.")
+                completionHandlerForUserData(false, "Cannot download public user data.")
                 return
             }
             
             guard let data = data else {
-                completionHandlerForUserData(false, nil, "No data was returned by the request!")
+                completionHandlerForUserData(false, "No data was returned by the request!")
                 return
             }
             
             let range = Range(5..<data.count)
             let newData = data.subdata(in: range)
             
-            let parsedResult: [String: AnyObject]!
-            
-            do {
-                parsedResult = try JSONSerialization.jsonObject(with: newData, options: .allowFragments) as! [String: AnyObject]
-            } catch {
-                completionHandlerForUserData(false, nil, "Could not parse the data as JSON: '\(String(describing: newData))'")
+            guard let parsedResult = self.parseJSON(newData) else {
+                completionHandlerForUserData(false, "Could not parse the data as JSON: '\(newData)'")
                 return
             }
             
             guard let userData = parsedResult["user"] as? [String: AnyObject] else {
-                completionHandlerForUserData(false, nil, "Could not get the user key.")
+                completionHandlerForUserData(false, "Could not get the user key.")
                 return
             }
             
-            completionHandlerForUserData(true, userData, nil)
-            // print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
+            guard let firstName = userData["first_name"] as? String else {
+                completionHandlerForUserData(false, "Could not get the first_name key.")
+                return
+            }
+            
+            self.userFirstName = firstName
+            
+            guard let lastName = userData["last_name"] as? String else {
+                completionHandlerForUserData(false, "Could not get the last_name key.")
+                return
+            }
+            
+            self.userLastName = lastName
+            
+            completionHandlerForUserData(true, nil)
         }
         
         return task
     }
     
-    // MARK: getStudentLocations
-    
     func getStudentLocations(completionHandlerForStudentLocation: @escaping (_ sucess: Bool, _ results: [[String: AnyObject]]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
+        let request = requestForStudentLocation(with: ["limit": "\(OTMConstant.numberOfLocations)", "order": "-updatedAt"])
         
-        let request = NSMutableURLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
-        request.addValue(OTMClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(OTMClient.restAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-       
-        let task = dataTask(with: request as URLRequest) { (data, error) in
+        let task = dataTask(with: request) { (data, error) in
             guard (error == nil) else {
                 completionHandlerForStudentLocation(false, nil, "Cannot download student locations.")
                 return
@@ -175,12 +164,8 @@ class OTMClient: NSObject {
                 return
             }
             
-            let parsedResult: [String: AnyObject]!
-            
-            do {
-                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: AnyObject]
-            } catch {
-                completionHandlerForStudentLocation(false, nil, "Could not parse the data as JSON: '\(String(describing: data))'")
+            guard let parsedResult = self.parseJSON(data) else {
+                completionHandlerForStudentLocation(false, nil, "Could not parse the data as JSON: '\(data)'")
                 return
             }
             
@@ -190,106 +175,45 @@ class OTMClient: NSObject {
             }
             
             completionHandlerForStudentLocation(true, results, nil)
-            
         }
         
         return task
     }
     
-    // MARK: getAStudentLocation
-    
-    func getAStudentLocation(completionHandlerForStudentLocation: @escaping (_ sucess: Bool, _ result: [String: AnyObject]?, _ errorString: String?) -> Void) -> URLSessionDataTask {
+    func getAStudentLocation(completionHandlerForAStudentLocation: @escaping (_ sucess: Bool, _ errorString: String?) -> Void) -> URLSessionDataTask {
+        let request = requestForStudentLocation(with: ["where": "{\"uniqueKey\":\"\(self.userID!)\"}", "order": "-updatedAt"])
         
-        var component = URLComponents()
-        component.scheme = OTMClient.OTMConstant.scheme
-        component.host = OTMClient.OTMConstant.hostParse
-        component.path = OTMClient.OTMConstant.pathParse
-        component.queryItems = [URLQueryItem]()
-        component.queryItems!.append( URLQueryItem(name: "where", value: "{\"uniqueKey\":\"\(OTMClient.sharedInstance.userID!)\"}") )
-        print("\(component.url!)")
-        
-        let request = NSMutableURLRequest(url: component.url!)
-        request.addValue(OTMClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(OTMClient.restAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        
-        let task = dataTask(with: request as URLRequest) { (data, error) in
+        let task = dataTask(with: request) { (data, error) in
             guard (error == nil) else {
-                completionHandlerForStudentLocation(false, nil, "Cannot download the student location.")
+                completionHandlerForAStudentLocation(false, "Cannot download the student location.")
                 return
             }
             
             guard let data = data else {
-                completionHandlerForStudentLocation(false, nil, "No data was returned by the request!")
+                completionHandlerForAStudentLocation(false, "No data was returned by the request!")
                 return
             }
             
-            print(NSString(data: data, encoding: String.Encoding.utf8.rawValue)!)
-            
-            let parsedResult: [String: AnyObject]!
-            
-            do {
-                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: AnyObject]
-            } catch {
-                completionHandlerForStudentLocation(false, nil, "Could not parse the data as JSON: '\(String(describing: data))'")
+            guard let parsedResult = self.parseJSON(data) else {
+                completionHandlerForAStudentLocation(false, "Could not parse the data as JSON: '\(data)'")
                 return
             }
             
             guard let result = parsedResult["results"] as? [[String: AnyObject]], let _ = result[0]["uniqueKey"] as? String else {
-                completionHandlerForStudentLocation(false, nil, "Could not find the student location.")
+                completionHandlerForAStudentLocation(false, "Could not find the student location.")
                 return
             }
             
-            OTMClient.sharedInstance.objectID = result[0]["objectId"] as? String
+            self.objectID = result[0]["objectId"] as? String
             
-            completionHandlerForStudentLocation(true, result[0], nil)
-            
+            completionHandlerForAStudentLocation(true, nil)
         }
         
         return task
     }
     
-    // MARK: postAStudentLocation
-    
     func postAStudentLocation(with parameters: [String: String], completionHandlerForPostLocation: @escaping (_ sucess: Bool, _ errorString: String?) -> Void) -> URLSessionDataTask {
-        
-        var component = URLComponents()
-        component.scheme = OTMClient.OTMConstant.scheme
-        component.host = OTMClient.OTMConstant.hostParse
-        
-        print("\(String(describing: OTMClient.sharedInstance.objectID))")
-        
-        var httpMethod: String
-        
-        if let objectID = OTMClient.sharedInstance.objectID {
-            component.path = OTMClient.OTMConstant.pathParse + "/\(objectID)"
-            httpMethod = "PUT"
-        } else {
-            component.path = OTMClient.OTMConstant.pathParse
-            httpMethod = "POST"
-        }
-        /*
-        let request = NSMutableURLRequest()
-        
-        if let objectID = OTMClient.sharedInstance.objectID {
-            print("overwriting...")
-            print("https://parse.udacity.com/parse/classes/StudentLocation/\(objectID)")
-            request.url = URL(string: "https://parse.udacity.com/parse/classes/StudentLocation/\(objectID)")!
-            request.httpMethod = "PUT"
-        } else {
-            print("submitting...")
-            print("https://parse.udacity.com/parse/classes/StudentLocation")
-            request.url = URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!
-            request.httpMethod = "POST"
-        }*/
-        print("\(component.url!)")
-        print(httpMethod)
-        
-        let request = NSMutableURLRequest(url: component.url!)
-        request.httpMethod = httpMethod
-        request.addValue(OTMClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(OTMClient.restAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = httpBodyForPostAndPut(with: parameters).data(using: String.Encoding.utf8)
+        let request = requestForPutAndPost(with: parameters)
         
         let task = dataTask(with: request as URLRequest) { (data, error) in
             guard (error == nil) else {
@@ -302,19 +226,15 @@ class OTMClient: NSObject {
                 return
             }
             
-            let parsedResult: [String: AnyObject]!
-            
-            do {
-                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: AnyObject]
-            } catch {
-                completionHandlerForPostLocation(false, "Could not parse the data as JSON: '\(String(describing: data))'")
+            guard let parsedResult = self.parseJSON(data) else {
+                completionHandlerForPostLocation(false, "Could not parse the data as JSON: '\(data)'")
                 return
             }
             
             print("\(parsedResult)")
             
             guard (parsedResult["updatedAt"] as? String) != nil else {
-                completionHandlerForPostLocation(false, "Could not find the student location.")
+                completionHandlerForPostLocation(false, "Could not confirm the success.")
                 return
             }
             
@@ -325,10 +245,7 @@ class OTMClient: NSObject {
         return task
     }
     
-    // MARK: - logOut
-    
     func logOut(completionHandlerForLogOut: @escaping (_ success: Bool, _ errorString: String?) -> Void) -> URLSessionDataTask {
-        
         let request = NSMutableURLRequest(url: URL(string: OTMClient.SessionURL)!)
         request.httpMethod = "DELETE"
         var xsrfCookie: HTTPCookie? = nil
@@ -349,10 +266,7 @@ class OTMClient: NSObject {
             let range = Range(5..<data!.count)
             let newData = data!.subdata(in: range)
             
-            let parsedResult: [String: AnyObject]!
-            do {
-                parsedResult = try JSONSerialization.jsonObject(with: newData, options: .allowFragments) as! [String: AnyObject]
-            } catch {
+            guard let parsedResult = self.parseJSON(newData) else {
                 completionHandlerForLogOut(false, "The data returned has a problem. Try again.")
                 return
             }
@@ -369,6 +283,7 @@ class OTMClient: NSObject {
         return task
     }
     
+    // MARK: - Custom Methods
     func reset() {
         OTMClient.sharedInstance.requestToken = nil
         OTMClient.sharedInstance.sessionID = nil
@@ -378,8 +293,67 @@ class OTMClient: NSObject {
         OTMClient.sharedInstance.objectID = nil
     }
     
-    // MARK:
-    func httpBodyForPostAndPut(with parameters: [String: String]) -> String {
+    func requestForSessionID(with parameters: [String: String]) -> URLRequest {
+        let email = parameters["email"]
+        let password = parameters["password"]
+        
+        let request = NSMutableURLRequest(url: URL(string: OTMClient.SessionURL)!)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = "{\"udacity\": {\"username\": \"\(email!)\", \"password\": \"\(password!)\"}}".data(using: String.Encoding.utf8)
+        
+        return request as URLRequest
+    }
+    
+    func requestForStudentLocation(with queryItems: [String: String]) -> URLRequest {
+        var component = URLComponents()
+        component.scheme = OTMClient.OTMConstant.scheme
+        component.host = OTMClient.OTMConstant.hostParse
+        component.path = OTMClient.OTMConstant.pathParse
+        component.queryItems = [URLQueryItem]()
+        
+        for item in queryItems {
+            component.queryItems!.append( URLQueryItem(name: "\(item.key)", value: "\(item.value)" ))
+        }
+        
+        print("\(component.url!)")
+        
+        let request = NSMutableURLRequest(url: component.url!)
+        request.addValue(OTMClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue(OTMClient.restAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+        
+        return request as URLRequest
+    }
+    
+    func requestForPutAndPost(with parameters: [String: String]) -> URLRequest {
+        var component = URLComponents()
+        component.scheme = OTMClient.OTMConstant.scheme
+        component.host = OTMClient.OTMConstant.hostParse
+        component.path = OTMClient.OTMConstant.pathParse
+        
+        var httpMethod: String
+        
+        if let objectID = OTMClient.sharedInstance.objectID {
+            component.path = component.path + "/\(objectID)"
+            httpMethod = "PUT"
+        } else {
+            httpMethod = "POST"
+        }
+        
+        print(component.url!)
+        
+        let request = NSMutableURLRequest(url: component.url!)
+        request.httpMethod = httpMethod
+        request.addValue(OTMClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue(OTMClient.restAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = httpBodyForPostAndPut(with: parameters)
+        
+        return request as URLRequest
+    }
+    
+    func httpBodyForPostAndPut(with parameters: [String: String]) -> Data? {
         var extendedParameters = parameters
         extendedParameters["uniqueKey"] = "\"\(OTMClient.sharedInstance.userID!)\""
         extendedParameters["firstName"] = "\"\(OTMClient.sharedInstance.userFirstName!)\""
@@ -394,12 +368,11 @@ class OTMClient: NSObject {
         stringForHttpBody.removeLast(2)
         stringForHttpBody.append("}")
 
-        return stringForHttpBody
+        return stringForHttpBody.data(using: String.Encoding.utf8)
     }
     
     // MARK: - dataTask
     func dataTask(with request: URLRequest, completionHandlerForDataTask: @escaping (_ result: Data?, _ error: NSError?) -> Void) -> URLSessionDataTask {
-        
         let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
             func sendError(_ error: String) {
                 let userInfo = [NSLocalizedDescriptionKey: error]
@@ -427,5 +400,18 @@ class OTMClient: NSObject {
         
         task.resume()
         return task
+    }
+    
+    // MARK: - JSONSerialization
+    func parseJSON(_ data: Data) -> [String: AnyObject]? {
+        let parsedResult: [String: AnyObject]!
+        
+        do {
+            parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: AnyObject]
+        } catch {
+            return nil
+        }
+        
+        return parsedResult
     }
 }

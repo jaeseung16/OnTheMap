@@ -21,11 +21,10 @@ extension OTMClient {
         static let hostParse = "parse.udacity.com"
         static let pathAPI = "/api/session"
         static let pathParse = "/parse/classes/StudentLocation"
+        static let numberOfLocations = 100
     }
     
     static let SessionURL = "https://www.udacity.com/api/session"
-    static let ParseURL = "https://parse.udacity.com/parse/classes/StudentLocation"
+    static let UserDataURL = "https://www.udacity.com/api/users/"
     
-    // MARK: Methods
-
 }

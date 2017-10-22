@@ -269,6 +269,11 @@
                                                 <action selector="cancel:" destination="0Y0-SD-4V5" id="Zaf-rZ-B7Q"/>
                                             </connections>
                                         </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" title="Submit" id="evC-XB-7gg">
+                                            <connections>
+                                                <action selector="submit:" destination="0Y0-SD-4V5" id="IrO-Vs-hID"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -309,17 +314,13 @@
                                 <rect key="frame" x="64" y="206" width="247" height="30"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
-                                <state key="normal" title="Submit"/>
+                                <state key="normal" title="Find on the Map"/>
                                 <connections>
-                                    <action selector="submit:" destination="0Y0-SD-4V5" eventType="touchUpInside" id="2FC-51-GIx"/>
+                                    <action selector="find:" destination="0Y0-SD-4V5" eventType="touchUpInside" id="3I5-X2-wpQ"/>
                                 </connections>
                             </button>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ibR-uM-Ex1">
                                 <rect key="frame" x="0.0" y="244" width="375" height="403"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="403" id="OVX-cp-Bgn"/>
-                                    <constraint firstAttribute="width" constant="375" id="TBP-Gk-6YA"/>
-                                </constraints>
                                 <connections>
                                     <outlet property="delegate" destination="0Y0-SD-4V5" id="dRb-x6-KuG"/>
                                 </connections>
@@ -330,6 +331,7 @@
                             <constraint firstItem="GNf-OK-E5v" firstAttribute="top" secondItem="ZnZ-4R-nhC" secondAttribute="bottom" constant="8" id="0tY-dE-dU6"/>
                             <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="ZnZ-4R-nhC" secondAttribute="trailing" constant="16" id="0wF-mo-FFZ"/>
                             <constraint firstItem="lj3-Um-4TI" firstAttribute="top" secondItem="LBE-ny-Qeb" secondAttribute="bottom" constant="8" id="8IK-KM-Crp"/>
+                            <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="ibR-uM-Ex1" secondAttribute="trailing" id="8Lb-SG-Btt"/>
                             <constraint firstItem="ZnZ-4R-nhC" firstAttribute="top" secondItem="LUM-D3-cLY" secondAttribute="bottom" constant="8" id="8Vx-5A-1D6"/>
                             <constraint firstAttribute="bottom" secondItem="ibR-uM-Ex1" secondAttribute="bottom" constant="20" symbolic="YES" id="BHL-AQ-RUh"/>
                             <constraint firstItem="LUM-D3-cLY" firstAttribute="top" secondItem="lj3-Um-4TI" secondAttribute="bottom" constant="8" id="BwI-xB-oJT"/>
@@ -341,9 +343,11 @@
                             <constraint firstItem="lON-SZ-Wt7" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" id="Llz-wq-A2f"/>
                             <constraint firstItem="ZnZ-4R-nhC" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="M2L-PH-RMM"/>
                             <constraint firstItem="LBE-ny-Qeb" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="MZG-BE-UxZ"/>
+                            <constraint firstItem="ibR-uM-Ex1" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" id="Nhg-I4-ZCD"/>
                             <constraint firstItem="oFS-O1-YAV" firstAttribute="centerY" secondItem="ibR-uM-Ex1" secondAttribute="centerY" id="Or9-87-skB"/>
                             <constraint firstItem="LBE-ny-Qeb" firstAttribute="top" secondItem="lON-SZ-Wt7" secondAttribute="bottom" constant="8" id="TR7-RP-LqZ"/>
                             <constraint firstItem="lj3-Um-4TI" firstAttribute="leading" secondItem="1Pp-mz-vxQ" secondAttribute="leading" constant="16" id="TgW-Mf-uuc"/>
+                            <constraint firstItem="ibR-uM-Ex1" firstAttribute="centerX" secondItem="1Pp-mz-vxQ" secondAttribute="centerX" id="VTY-4j-gAq"/>
                             <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="lj3-Um-4TI" secondAttribute="trailing" constant="16" id="WCa-RM-nwe"/>
                             <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="LUM-D3-cLY" secondAttribute="trailing" constant="16" id="Wkv-TK-a6r"/>
                             <constraint firstItem="1Pp-mz-vxQ" firstAttribute="trailing" secondItem="LBE-ny-Qeb" secondAttribute="trailing" constant="16" id="aQp-Hy-coP"/>
@@ -355,9 +359,10 @@
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="oFS-O1-YAV" id="PFl-yS-mcC"/>
+                        <outlet property="findButton" destination="GNf-OK-E5v" id="wMU-Nb-6Yy"/>
                         <outlet property="locationMapView" destination="ibR-uM-Ex1" id="Gy2-hc-nos"/>
                         <outlet property="locationTextField" destination="lj3-Um-4TI" id="yzt-Sb-Nu7"/>
-                        <outlet property="submitButton" destination="GNf-OK-E5v" id="Aly-f6-Vib"/>
+                        <outlet property="submitButton" destination="evC-XB-7gg" id="S8Q-V3-Luw"/>
                         <outlet property="websiteTextField" destination="ZnZ-4R-nhC" id="zgQ-XS-bSw"/>
                     </connections>
                 </viewController>

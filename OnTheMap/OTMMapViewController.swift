@@ -11,27 +11,25 @@ import MapKit
 
 class OTMMapViewController: UIViewController {
 
-    var annotations = [MKPointAnnotation]()
+    // MARK: Properties
+    // MARK: IBOutlets
+    @IBOutlet weak var mapView: MKMapView!
     
+    // MARK: Shared Instances
     let otmLocations = OTMLocations.sharedInstance
     let otmClient = OTMClient.sharedInstance
     
-    @IBOutlet weak var mapView: MKMapView!
+    // MARK: Other Properties
+    var annotations = [MKPointAnnotation]()
     
+    // MARK: - Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
         self.populateAnnotations()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
-    // MARK: - IBActions
-    
+    // MARK: IBActions
     @IBAction func logout(_ sender: UIBarButtonItem) {
         let _ = otmClient.logOut { (success, errorString) in
             if success {
@@ -39,51 +37,22 @@ class OTMMapViewController: UIViewController {
                     self.dismiss(animated: true)
                 }
             } else {
-                DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "Logout Failed", message: errorString, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
-                        NSLog("Logout Failed")
-                    }))
-                    self.present(alert, animated: true, completion: nil)
-                }
+                self.alertController("Logout Failed", errorString!, "Dismiss")
             }
         }
     }
     
     @IBAction func refresh(_ sender: UIBarButtonItem) {
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        self.mapView.removeAnnotations(self.annotations)
-        self.annotations = []
-        
-        otmLocations.refresh { (success, errorString) in
-            if success {
-                DispatchQueue.main.async {
-                    self.populateAnnotations()
-                    
-                    print("\(self.otmLocations.studentLocations.count)")
-                    
-                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                    //self.activityIndicator.stopAnimating()
-                    //self.performSegue(withIdentifier: "LogedIn", sender: self)
-                }
-            } else {
-                //self.loginFailed(errorString!)
-                print("Refresh failed")
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                return
-            }
-        }
+        self.reloadData()
     }
     
     @IBAction func addLocation(_ sender: UIBarButtonItem) {
-        let _ = otmClient.getAStudentLocation { (success, result, errorString) in
+        let _ = otmClient.getAStudentLocation { (success, errorString) in
             if success {
-                DispatchQueue.main.async {
-                    let message = "You already posted a student location. Would you like to overwrite your location?"
-                    self.alertOverwrite(message)
-                }
+                    self.alertOverwrite()
             } else {
                 guard (errorString == "Could not find the student location.") else {
+                    self.alertController("Add Location", "Cannot finish the job. Try again.", "Dismiss")
                     return
                 }
                 self.presentInformationPostingVC()
@@ -91,15 +60,35 @@ class OTMMapViewController: UIViewController {
         }
     }
     
-    // MARK: - Methods
+    // MARK: Custom Methods
+    func reloadData() {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        self.mapView.removeAnnotations(self.annotations)
+        self.annotations = []
+        
+        otmLocations.refresh { (success, errorString) in
+            DispatchQueue.main.async {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                //self.activityIndicator.stopAnimating()
+            }
+            
+            if success {
+                DispatchQueue.main.async {
+                    self.populateAnnotations()
+                }
+            } else {
+                self.alertController("Refresh Failed", errorString!, "Dismiss")
+                return
+            }
+        }
+    }
     
     func populateAnnotations() {
         for location in otmLocations.studentLocations {
-            let latitude = location.latitude
-            let longitude = location.longitude
-            let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude))
+            let coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(location.latitude), longitude: CLLocationDegrees(location.longitude))
             
             let annotation = MKPointAnnotation()
+            
             annotation.coordinate = coordinate
             annotation.title = "\(location.firstName) \(location.lastName)"
             annotation.subtitle = location.mediaURL
@@ -110,19 +99,35 @@ class OTMMapViewController: UIViewController {
         self.mapView.addAnnotations(annotations)
     }
     
-    func alertOverwrite(_ message: String) {
-        let alert = UIAlertController(title: "Warning", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Overwrite", style: .default, handler: { _ in
-            NSLog("Overwriting")
-            self.presentInformationPostingVC()
-            return
-        }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { _ in
-            NSLog("Overwriting Canceled.")
-            return
-        }))
-        
-        self.present(alert, animated: true, completion: nil)
+    func alertController(_ title: String, _ message: String, _ action: String) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: action, style: .default, handler: { _ in
+                NSLog(message)
+                return
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func alertOverwrite() {
+        DispatchQueue.main.async {
+            let message = "You already posted a student location. Would you like to overwrite your location?"
+            let alert = UIAlertController(title: "Warning", message: message, preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Overwrite", style: .default, handler: { _ in
+                NSLog("Overwriting")
+                self.presentInformationPostingVC()
+                return
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { _ in
+                NSLog("Overwriting Canceled.")
+                return
+            }))
+            
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     func presentInformationPostingVC() {
@@ -130,13 +135,15 @@ class OTMMapViewController: UIViewController {
             var informationPostingViewController: InformationPostingViewController
             
             informationPostingViewController = self.storyboard?.instantiateViewController(withIdentifier: "InformationPostingVC") as! InformationPostingViewController
-            self.present(informationPostingViewController, animated: true, completion: nil)
+
+            self.present(informationPostingViewController, animated: true)
         }
     }
 }
 
+// MARK: -
 extension OTMMapViewController: MKMapViewDelegate {
-    // MARK: - MKMapViewDelegate
+    // MARK: MKMapViewDelegate
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
