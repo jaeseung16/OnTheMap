@@ -29,13 +29,6 @@ class OTMLoginViewController: UIViewController {
         activityIndicator.center = view.center
     }
     
-    // TODO: Remove these two lines later
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        emailTextField.text = "jaeseung@gmail.com"
-        passwordTextField.text = "6Uq-yNP-VUp-dUQ"
-    }
-    
     // MARK: IBActions
     @IBAction func loginButtonPressed(_ sender: UIButton) {
         guard let email = emailTextField.text, email != "" else {
@@ -51,21 +44,24 @@ class OTMLoginViewController: UIViewController {
         self.indicatorStatus(true)
         
         let _ = otmClient.logIn(with: ["email": email, "password": password]) { (success, errorString) in
+            DispatchQueue.main.async {
+                self.indicatorStatus(false)
+                self.emailTextField.text = "Email"
+                self.passwordTextField.text = "password"
+            }
+            
             if success {
                 self.otmLocations.load(completionHandlerForLoad: { (success, errorString) in
                     if success {
                         DispatchQueue.main.async {
-                            self.indicatorStatus(false)
                             self.performSegue(withIdentifier: "LogedIn", sender: self)
                         }
                     } else {
                         self.loginFailed(errorString!)
-                        return
                     }
                 })
             } else {
                 self.loginFailed(errorString!)
-                return
             }
         }
     }
@@ -78,8 +74,7 @@ class OTMLoginViewController: UIViewController {
                 NSLog("Login Failed")
             }))
             
-            self.present(alert, animated: true, completion: nil)
-            self.indicatorStatus(false)
+            self.present(alert, animated: true)
         }
     }
     
@@ -87,8 +82,6 @@ class OTMLoginViewController: UIViewController {
         self.emailTextField.isEnabled = !on
         self.passwordTextField.isEnabled = !on
 
-        UIApplication.shared.isNetworkActivityIndicatorVisible = on
-        
         if on {
             self.activityIndicator.startAnimating()
         } else {
@@ -99,10 +92,13 @@ class OTMLoginViewController: UIViewController {
 }
 
 // MARK: - UITextFieldDelegate
-
 extension OTMLoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.text = ""
     }
 }

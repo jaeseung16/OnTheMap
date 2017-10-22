@@ -59,6 +59,7 @@ class OTMClient: NSObject {
                     return
                 }
                 
+                // Distinguish an error due to time-out from one caused by wrong credentials.
                 if errorString.starts(with: "There was an error with your request: ") {
                     completionHandlerForSessionID(false, "The request timed out.")
                 } else if errorString == "Your request returned a status code other than 2xx!" {
@@ -70,12 +71,12 @@ class OTMClient: NSObject {
             }
            
             guard let data = data else {
-                completionHandlerForSessionID(false, "No data was returned by the request!")
+                completionHandlerForSessionID(false, "No data was returned by the request.")
                 return
             }
+            
             let range = Range(5..<data.count)
             let newData = data.subdata(in: range)
-            // print(NSString(data: newData, encoding: String.Encoding.utf8.rawValue)!)
             
             guard let parsedResult = self.parseJSON(newData) else {
                 completionHandlerForSessionID(false, "Could not parse the data as JSON: '\(newData)'")
@@ -87,17 +88,15 @@ class OTMClient: NSObject {
                 return
             }
             
-            self.userID = key
-            
             guard let sessionID = parsedResult["session"] as? [String: AnyObject], let id = sessionID["id"] as? String else {
                 completionHandlerForSessionID(false, "Could not get the session ID.")
                 return
             }
             
+            // Save userID and sessionID for later uses.
+            self.userID = key
             self.sessionID = id
-            
             completionHandlerForSessionID(true, nil)
-            
         }
             
         return task
@@ -113,7 +112,7 @@ class OTMClient: NSObject {
             }
             
             guard let data = data else {
-                completionHandlerForUserData(false, "No data was returned by the request!")
+                completionHandlerForUserData(false, "No data was returned by the request.")
                 return
             }
             
@@ -135,15 +134,14 @@ class OTMClient: NSObject {
                 return
             }
             
-            self.userFirstName = firstName
-            
             guard let lastName = userData["last_name"] as? String else {
                 completionHandlerForUserData(false, "Could not get the last_name key.")
                 return
             }
             
+            // Save the name of a user for the method postAStudentLocation(with:completionHandlerForPostLocation:)
+            self.userFirstName = firstName
             self.userLastName = lastName
-            
             completionHandlerForUserData(true, nil)
         }
         
@@ -160,7 +158,7 @@ class OTMClient: NSObject {
             }
             
             guard let data = data else {
-                completionHandlerForStudentLocation(false, nil, "No data was returned by the request!")
+                completionHandlerForStudentLocation(false, nil, "No data was returned by the request.")
                 return
             }
             
@@ -190,7 +188,7 @@ class OTMClient: NSObject {
             }
             
             guard let data = data else {
-                completionHandlerForAStudentLocation(false, "No data was returned by the request!")
+                completionHandlerForAStudentLocation(false, "No data was returned by the request.")
                 return
             }
             
@@ -199,13 +197,13 @@ class OTMClient: NSObject {
                 return
             }
             
-            guard let result = parsedResult["results"] as? [[String: AnyObject]], let _ = result[0]["uniqueKey"] as? String else {
+            guard let result = parsedResult["results"] as? [[String: AnyObject]], let objectID = result[0]["objectId"] as? String else {
                 completionHandlerForAStudentLocation(false, "Could not find the student location.")
                 return
             }
             
-            self.objectID = result[0]["objectId"] as? String
-            
+            // Save the objectID for the method postAStudentLocation(with:completionHandlerForPostLocation:)
+            self.objectID = objectID
             completionHandlerForAStudentLocation(true, nil)
         }
         
@@ -222,7 +220,7 @@ class OTMClient: NSObject {
             }
             
             guard let data = data else {
-                completionHandlerForPostLocation(false, "No data was returned by the request!")
+                completionHandlerForPostLocation(false, "No data was returned by the request.")
                 return
             }
             
@@ -231,31 +229,19 @@ class OTMClient: NSObject {
                 return
             }
             
-            print("\(parsedResult)")
-            
             guard (parsedResult["updatedAt"] as? String) != nil else {
-                completionHandlerForPostLocation(false, "Could not confirm the success.")
+                completionHandlerForPostLocation(false, "There is a problem. Try again.")
                 return
             }
             
             completionHandlerForPostLocation(true, nil)
-            
         }
         
         return task
     }
     
     func logOut(completionHandlerForLogOut: @escaping (_ success: Bool, _ errorString: String?) -> Void) -> URLSessionDataTask {
-        let request = NSMutableURLRequest(url: URL(string: OTMClient.SessionURL)!)
-        request.httpMethod = "DELETE"
-        var xsrfCookie: HTTPCookie? = nil
-        let sharedCookieStorage = HTTPCookieStorage.shared
-        for cookie in sharedCookieStorage.cookies! {
-            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
-        }
-        if let xsrfCookie = xsrfCookie {
-            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
-        }
+        let request = requestForLogOut()
         
         let task = dataTask(with: request as URLRequest) { (data, error) in
             guard (error == nil) else {
@@ -267,12 +253,12 @@ class OTMClient: NSObject {
             let newData = data!.subdata(in: range)
             
             guard let parsedResult = self.parseJSON(newData) else {
-                completionHandlerForLogOut(false, "The data returned has a problem. Try again.")
+                completionHandlerForLogOut(false, "There is a problem. Try again.")
                 return
             }
             
             guard let session = parsedResult["session"] as? [String: AnyObject], (session["id"] as? String) != nil else {
-                completionHandlerForLogOut(false, "The data returned has a problem. Try again.")
+                completionHandlerForLogOut(false, "There is a problem. Try again.")
                 return
             }
             
@@ -284,6 +270,7 @@ class OTMClient: NSObject {
     }
     
     // MARK: - Custom Methods
+    // Reset variables after logging out
     func reset() {
         OTMClient.sharedInstance.requestToken = nil
         OTMClient.sharedInstance.sessionID = nil
@@ -293,6 +280,7 @@ class OTMClient: NSObject {
         OTMClient.sharedInstance.objectID = nil
     }
     
+    // Construct a request for a session ID
     func requestForSessionID(with parameters: [String: String]) -> URLRequest {
         let email = parameters["email"]
         let password = parameters["password"]
@@ -306,6 +294,7 @@ class OTMClient: NSObject {
         return request as URLRequest
     }
     
+    // Construct a request for Student Location(s)
     func requestForStudentLocation(with queryItems: [String: String]) -> URLRequest {
         var component = URLComponents()
         component.scheme = OTMClient.OTMConstant.scheme
@@ -317,8 +306,6 @@ class OTMClient: NSObject {
             component.queryItems!.append( URLQueryItem(name: "\(item.key)", value: "\(item.value)" ))
         }
         
-        print("\(component.url!)")
-        
         let request = NSMutableURLRequest(url: component.url!)
         request.addValue(OTMClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue(OTMClient.restAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
@@ -326,6 +313,7 @@ class OTMClient: NSObject {
         return request as URLRequest
     }
     
+    // Construct a request for POST or PUT a Student Location
     func requestForPutAndPost(with parameters: [String: String]) -> URLRequest {
         var component = URLComponents()
         component.scheme = OTMClient.OTMConstant.scheme
@@ -341,8 +329,6 @@ class OTMClient: NSObject {
             httpMethod = "POST"
         }
         
-        print(component.url!)
-        
         let request = NSMutableURLRequest(url: component.url!)
         request.httpMethod = httpMethod
         request.addValue(OTMClient.applicationID, forHTTPHeaderField: "X-Parse-Application-Id")
@@ -353,6 +339,25 @@ class OTMClient: NSObject {
         return request as URLRequest
     }
     
+    func requestForLogOut() -> URLRequest {
+        let request = NSMutableURLRequest(url: URL(string: OTMClient.SessionURL)!)
+        request.httpMethod = "DELETE"
+        
+        var xsrfCookie: HTTPCookie? = nil
+        let sharedCookieStorage = HTTPCookieStorage.shared
+        
+        for cookie in sharedCookieStorage.cookies! {
+            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+        }
+        
+        if let xsrfCookie = xsrfCookie {
+            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
+        
+        return request as URLRequest
+    }
+    
+    // Construct HTTP Body for POST or PUT a Student Location
     func httpBodyForPostAndPut(with parameters: [String: String]) -> Data? {
         var extendedParameters = parameters
         extendedParameters["uniqueKey"] = "\"\(OTMClient.sharedInstance.userID!)\""
@@ -371,8 +376,8 @@ class OTMClient: NSObject {
         return stringForHttpBody.data(using: String.Encoding.utf8)
     }
     
-    // MARK: - dataTask
-    func dataTask(with request: URLRequest, completionHandlerForDataTask: @escaping (_ result: Data?, _ error: NSError?) -> Void) -> URLSessionDataTask {
+    // Common DataTask
+    func dataTask(with request: URLRequest, completionHandlerForDataTask: @escaping (_ data: Data?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
             func sendError(_ error: String) {
                 let userInfo = [NSLocalizedDescriptionKey: error]
@@ -380,7 +385,6 @@ class OTMClient: NSObject {
             }
             
             guard (error == nil) else {
-                print("\(error!)")
                 sendError("There was an error with your request: \(error!)")
                 return
             }
@@ -402,7 +406,7 @@ class OTMClient: NSObject {
         return task
     }
     
-    // MARK: - JSONSerialization
+    // Parse JSON data into a dictionary
     func parseJSON(_ data: Data) -> [String: AnyObject]? {
         let parsedResult: [String: AnyObject]!
         

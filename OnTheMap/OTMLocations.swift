@@ -30,6 +30,7 @@ class OTMLocations {
                 }
                 
                 completionHandlerForLoad(true, nil)
+                
             } else {
                 print("\(self.studentLocations.count)")
                 completionHandlerForLoad(false, errorString!)
@@ -37,11 +38,11 @@ class OTMLocations {
         }
     }
     
+    // Empty studentLocations before loading new locations
     func refresh(completionHandlerForRefresh: @escaping (_ success: Bool, _ error: String?) -> Void) {
         studentLocations = []
-        load { (success, error) in
+        self.load { (success, error) in
             completionHandlerForRefresh(success, error)
         }
     }
-    
 }

@@ -49,12 +49,14 @@ class OTMMapViewController: UIViewController {
     @IBAction func addLocation(_ sender: UIBarButtonItem) {
         let _ = otmClient.getAStudentLocation { (success, errorString) in
             if success {
-                    self.alertOverwrite()
+                // If a location is already in the system, ask for overwriting
+                self.alertOverwrite()
             } else {
                 guard (errorString == "Could not find the student location.") else {
                     self.alertController("Add Location", "Cannot finish the job. Try again.", "Dismiss")
                     return
                 }
+                // If a location is not found, it is a new post.
                 self.presentInformationPostingVC()
             }
         }
@@ -63,6 +65,8 @@ class OTMMapViewController: UIViewController {
     // MARK: Custom Methods
     func reloadData() {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        
+        // Remove the current annotations before reloading
         self.mapView.removeAnnotations(self.annotations)
         self.annotations = []
         
@@ -141,11 +145,9 @@ class OTMMapViewController: UIViewController {
     }
 }
 
-// MARK: -
+// MARK: - MKMapViewDelegate
 extension OTMMapViewController: MKMapViewDelegate {
-    // MARK: MKMapViewDelegate
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        
         let reuseId = "pin"
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         

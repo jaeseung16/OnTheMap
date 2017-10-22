@@ -39,10 +39,6 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         
         submitButton.isEnabled = false
         locationMapView.isHidden = true
-        
-        // Remove these two lines later
-        locationTextField.text = "New York"
-        websiteTextField.text = "https://www.google.com"
     }
     
     // MARK: - IBActions

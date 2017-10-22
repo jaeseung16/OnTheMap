@@ -41,15 +41,16 @@ class OTMTableViewController: UITableViewController {
     }
     
     @IBAction func addLocation(_ sender: UIBarButtonItem) {
-        
         let _ = otmClient.getAStudentLocation { (success, errorString) in
             if success {
-                    self.alertOverwrite()
+                // If a location is already in the system, ask for overwriting
+                self.alertOverwrite()
             } else {
                 guard (errorString == "Could not find the student location.") else {
                     self.alertController("Add Location", "Cannot finish the job. Try again.", "Dismiss")
                     return
                 }
+                // If a location is not found, it is a new post.
                 self.presentInformationPostingVC()
             }
         }
@@ -70,7 +71,6 @@ class OTMTableViewController: UITableViewController {
                 }
             } else {
                 self.alertController("Refresh Failed", errorString!, "Dismiss")
-                return
             }
         }
     }
