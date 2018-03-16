@@ -19,6 +19,7 @@ The user may need an acount with Udacity.com
 - Pins on the map display the locations of Udacity students.
 - Click the pin icon to add or overwrite your location.
 - Click the refrech icon to reload the data.
+- Click the 'Logout' button to log out and go back to the Login View.
 
 ### List Tab
 
@@ -26,6 +27,7 @@ The user may need an acount with Udacity.com
 - Selecting an item will open the corresponding URL in Safari.
 - Click the pin icon to add or overwrite your location.
 - Click the refrech icon to reload the data.
+- Click the 'Logout' button to log out and go back to the Login View.
 
 ### Add Location View
 
